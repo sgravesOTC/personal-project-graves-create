@@ -1,0 +1,56 @@
+{% extends "blog/base.html" %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<article class="article-detail">
+    <header class="article-header">
+        <div class="article-meta-line">
+            <time class="article-date" datetime="{{ article.publish|date:'c' }}">
+                {{ article.publish|date:"F j, Y" }}
+            </time>
+            <span class="meta-separator">·</span>
+            <span class="article-author">By {{ article.author.get_full_name|default:article.author.username }}</span>
+        </div>
+        
+        <h1 class="article-detail-title">{{ article.title }}</h1>
+
+        <img src="{{ article.image }}" alt="{{ article.title }}" class="article-detail-image">
+
+        <div class="article-decorative-line"></div>
+    </header>
+
+    <div class="article-body">
+        {{ article.body|linebreaks }}
+    </div>
+
+    <footer class="article-footer">
+        <div class="article-footer-divider"></div>
+        <div class="article-footer-content">
+            <div class="author-info">
+                <div class="author-avatar">
+                    {{ article.author.username|slice:":1"|upper }}
+                </div>
+                <div class="author-details">
+                    <p class="author-name">{{ article.author.get_full_name|default:article.author.username }}</p>
+                    <p class="author-bio">Writer and contributor</p>
+                </div>
+            </div>
+            
+            <a href="{% url 'blog:article_list' %}" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Back to articles</span>
+            </a>
+        </div>
+    </footer>
+</article>
+
+<aside class="related-articles">
+    <h3 class="related-title">Continue Reading</h3>
+    <div class="related-links">
+        <a href="{% url 'blog:article_list' %}" class="related-link">Browse all articles →</a>
+    </div>
+</aside>
+{% endblock %}
