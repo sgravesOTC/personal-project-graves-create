@@ -21,3 +21,5 @@ def article_detail(request, id):
         'blog/article/detail.html',
         {'article':article}       
     )
+
+from django.views.generic import ListView

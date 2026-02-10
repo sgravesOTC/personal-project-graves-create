@@ -1,9 +1,14 @@
 {% extends "blog/base.html" %}
+{% load static %}
 
 {% block title %}{{ article.title }}{% endblock %}
 
 {% block content %}
 <article class="article-detail">
+    {% if article.image %}
+    <img src="{{ article.image}}" alt="{{ article.title }}" class="article-detail-image">
+    {% endif %}
+    
     <header class="article-header">
         <div class="article-meta-line">
             <time class="article-date" datetime="{{ article.publish|date:'c' }}">
@@ -14,15 +19,49 @@
         </div>
         
         <h1 class="article-detail-title">{{ article.title }}</h1>
-
-        <img src="{{ article.image }}" alt="{{ article.title }}" class="article-detail-image">
-
+        
         <div class="article-decorative-line"></div>
     </header>
 
     <div class="article-body">
-        {{ article.body|linebreaks }}
+         {{ article.body|linebreaks }}
+        {% for section in article.sections.all %}
+        <section class="article-section">
+            <h2 class="section-header">{{ section.header }}</h2>
+            <div class="section-body">
+                {{ section.body|linebreaks }}
+            </div>
+        </section>
+        {% endfor %}
     </div>
+
+    {% if article.references.exists %}
+    <section class="references-section">
+        <h2 class="references-title">References</h2>
+        <ol class="references-list">
+            {% for reference in article.references.all %}
+            <li class="reference-item">
+                <span class="reference-author">{{ reference.author }}.</span>
+                <span class="reference-title">{{ reference.title }}.</span>
+                {% if reference.publish %}
+                <span class="reference-date">({{ reference.publish|date:"Y" }}).</span>
+                {% endif %}
+                {% if reference.ref_url %}
+                {% if reference.ref_url|slice:":4" == "http" %}
+                <a href="{{ reference.ref_url }}" class="reference-url" target="_blank" rel="noopener noreferrer">
+                    {{ reference.ref_url }}
+                </a>
+                {% else %}
+                <a href="https://{{ reference.ref_url }}" class="reference-url" target="_blank" rel="noopener noreferrer">
+                    {{ reference.ref_url }}
+                </a>
+                {% endif %}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ol>
+    </section>
+    {% endif %}
 
     <footer class="article-footer">
         <div class="article-footer-divider"></div>

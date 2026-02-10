@@ -298,7 +298,7 @@ a {
     width: 100%;
     height: 240px;
     object-fit: cover;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
     transition: transform var(--transition-medium);
     display: block;
 }
@@ -414,7 +414,8 @@ a {
     margin-bottom: 1.5rem;
 }
 
-.article-body p:first-of-type::first-letter {
+/* Large drop cap for the body field (main intro) */
+.article-body > p:first-of-type::first-letter {
     font-size: 4rem;
     font-family: var(--font-serif);
     font-weight: 600;
@@ -422,6 +423,125 @@ a {
     float: left;
     margin: 0.1em 0.1em 0 0;
     color: var(--color-accent);
+}
+
+
+
+/* ================================
+   ARTICLE SECTIONS
+   ================================ */
+.article-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.article-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.section-header {
+    font-size: 3rem;
+    font-weight: 500;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-primary);
+    position: relative;
+    padding-bottom: var(--spacing-sm);
+}
+
+.section-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--color-accent);
+}
+
+.section-body {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--color-text);
+}
+
+.section-body p {
+    margin-bottom: 1.5rem;
+}
+
+/* Smaller drop cap for each section */
+.section-body p:first-of-type::first-letter {
+    font-size: 2.5rem;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    line-height: 1;
+    float: left;
+    margin: 0.1em 0.1em 0 0;
+    color: var(--color-accent);
+}
+
+/* ================================
+   REFERENCES SECTION
+   ================================ */
+.references-section {
+    margin-top: var(--spacing-2xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
+}
+
+.references-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-primary);
+}
+
+.references-list {
+    list-style: none;
+    counter-reset: reference-counter;
+    padding-left: 0;
+}
+
+.reference-item {
+    counter-increment: reference-counter;
+    margin-bottom: var(--spacing-md);
+    padding-left: 2.5rem;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+.reference-item::before {
+    content: counter(reference-counter) ".";
+    position: absolute;
+    left: 0;
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+.reference-author {
+    font-weight: 500;
+}
+
+.reference-title {
+    font-style: italic;
+}
+
+.reference-date {
+    color: var(--color-text-light);
+}
+
+.reference-url {
+    display: inline-block;
+    margin-top: 0.25rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    word-break: break-all;
+    transition: color var(--transition-fast);
+}
+
+.reference-url:hover {
+    color: var(--color-accent-hover);
+    text-decoration: underline;
 }
 
 /* ================================
