@@ -1,0 +1,91 @@
+{% extends "newshroom/base.html" %}
+{% load newshroom_tags %}
+{% block title %}Articles{% endblock %}
+{% block content %}
+<h1>Articles</h1>
+{% if tag %}
+    <h2>Posts tagged with "{{tag.name}}"</h2>
+{% endif %}
+<ul>
+{% for article in articles %}
+<li class="list-item">
+  <img
+    src="{{ article.image.url }}"
+    class="mushroom-photo"
+    alt="{{ article.title }}"
+  />
+  <a href="{{ article.get_absolute_url }}">
+    {{ article.title }}
+  </a>
+{% comment %} {% if article.tags.all %}
+  <span class="tags">Tags: {{ article.tags.all|join:", " }}</span>
+{% endif %} {% endcomment %}
+
+{% if article.tags.all %}
+  <div class="article-tags">
+    {% for tag in article.tags.all %}
+      <a href="{% url 'newshroom:article_list_by_tag' tag.slug %}">{{ tag.name }}</a>
+    {% endfor %}
+  </div>
+{% endif %}
+  <span class="date">Published: {{ article.publish|date:"F j, Y" }}</span>
+  <span class="author">by {{ article.author.first_name }} {{ article.author.last_name }}</span>
+  <span class="description">{{ article.body|markdown|truncatewords_html:30 }}</span>
+</li>
+{% endfor %}
+</ul>
+
+{% include "pagination.html" with page=articles %}
+
+<div class="request-section">
+
+  {% if shroom_request %}
+    <div class="request-sent">
+      <p class="sent-icon">✦</p>
+      <h2>Request Received</h2>
+      <p>Thanks, {{ shroom_request.name }}. We'll consider your request for a future article.</p>
+    </div>
+  {% else %}
+    <div class="request-header">
+      <span class="request-label">Don't see what you're looking for?</span>
+      <h2>Request an Article</h2>
+      <p class="request-intro">Let us know which mushroom you'd like us to cover and we'll do our best to write it up.</p>
+    </div>
+
+    <form method="post" action="{% url 'newshroom:shroom_request' %}" novalidate class="request-form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="form-field {% if form.name.errors %}has-error{% endif %}">
+        <label for="{{ form.name.id_for_label }}">Your Name</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+          <span class="field-error">{{ form.name.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-field {% if form.email.errors %}has-error{% endif %}">
+        <label for="{{ form.email.id_for_label }}">Your Email</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <span class="field-error">{{ form.email.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-field {% if form.body.errors %}has-error{% endif %}">
+        <label for="{{ form.body.id_for_label }}">Which mushroom would you like covered?</label>
+        {{ form.body }}
+        {% if form.body.errors %}
+          <span class="field-error">{{ form.body.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn-send">Submit Request →</button>
+    </form>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "newshroom/base.html" %} 
+{% load newshroom_tags %}
+{% block title %}Search{% endblock %} 
+{%block content %}
+
+<div class="search-page">
+  <div class="search-header">
+    <h1 class="page-title">Search</h1>
+    <form method="get" class="search-form">
+      <div class="search-input-group">
+        <input
+          type="text"
+          name="query"
+          value="{{ query }}"
+          placeholder="Search articles..."
+          class="search-input"
+        />
+        <button type="submit" class="search-button">Search</button>
+      </div>
+    </form>
+  </div>
+
+  {% if query %}
+  <p class="search-summary">
+    {% if results %} {{ results|length }} result{{ results|length|pluralize }}
+    for <em>{{ query }}</em> {% else %} No results found for
+    <em>{{ query }}</em>
+    {% endif %}
+  </p>
+  {% endif %} {% if results %}
+  <div class="search-results">
+    {% for article in results %}
+    <div class="article-card">
+      <h2 class="article-card-title">
+        <a href="{% url 'newshroom:article_detail' article.publish.year article.publish.month article.slug %}">{{ article.title }}</a
+        >
+      </h2>
+      <p class="article-card-meta">
+        {{ article.publish|date:"F j, Y" }} &middot; 
+        {{article.author.first_name }} {{ article.author.last_name }}
+      </p>
+      <p class="article-card-excerpt">{{ article.body|markdown|truncatewords_html:30 }}</p>
+      <a href="{% url 'newshroom:article_detail' article.publish.year article.publish.month article.slug %}">Read more</a
+      >
+    </div>
+    {% endfor %}
+  </div>
+
+  {% elif query %}
+  <div class="search-no-results">
+    <p>
+      Try a different search term, or
+      <a href="{% url 'newshroom:article_list' %}">browse all articles</a>.
+    </p>
+  </div>
+
+  {% else %}
+  <p class="search-prompt">Enter a term above to search all articles.</p>
+  {% endif %}
+</div>
+
+{% endblock %}
