@@ -1,0 +1,36 @@
+{% extends "newshroom/base.html" %}
+{% load newshroom_tags %}
+
+{% block title %}{{article.title}}{% endblock %}
+
+{% block content %}
+    <h1>{{article.title}}</h1>
+
+    <p class="date">
+        Published {{ article.publish}} by {{article.author.first_name}} {{article.author.last_name}}
+    </p>
+      <img
+    src="{{ article.image.url }}"
+    class="mushroom-photo"
+    alt="{{ article.title }}"
+  />
+    {{article.body|markdown}}
+
+    <p>
+        <a href="{% url "newshroom:news_letter" article.id %}">
+        Share this article
+        </a>
+    </p>
+
+<div class="similar-articles">
+  <h2>Similar Articles</h2>
+  {% for article in similar_articles %}
+    <a href="{{ article.get_absolute_url }}" class="similar-article-link">
+      {{ article.title }}
+    </a>
+  {% empty %}
+    <p class="no-similar">No similar articles yet.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

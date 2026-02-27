@@ -1,0 +1,62 @@
+{% extends "newshroom/base.html" %}
+{% block title %}Share Article{% endblock %}
+{% block content %}
+
+<div class="newsletter-container">
+
+  <div class="newsletter-header">
+    <span class="newsletter-label">Share This Article</span>
+    <h1>{{ article.title }}</h1>
+    <p class="date">
+      By {{ article.author.first_name }} {{ article.author.last_name }}
+      &ensp;·&ensp;
+      {{ article.publish|date:"F j, Y" }}
+    </p>
+  </div>
+
+  {% if sent %}
+
+    <div class="sent-confirmation">
+      <p class="sent-icon">✦</p>
+      <h2>Article Sent</h2>
+      <p>Your recommendation for <em>{{ article.title }}</em> has been delivered.</p>
+      <a href="{{ article.get_absolute_url }}" class="btn-back">← Back to Article</a>
+    </div>
+
+  {% else %}
+
+    <p class="newsletter-intro">
+      Recommend this article to a friend. Enter your name and their email address below.
+    </p>
+
+    <form method="post" novalidate class="newsletter-form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="form-field {% if form.name.errors %}has-error{% endif %}">
+        <label for="{{ form.name.id_for_label }}">Your Name</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+          <span class="field-error">{{ form.name.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-field {% if form.email.errors %}has-error{% endif %}">
+        <label for="{{ form.email.id_for_label }}">Recipient's Email</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <span class="field-error">{{ form.email.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn-send">Send Recommendation →</button>
+    </form>
+
+  {% endif %}
+
+</div>
+
+{% endblock %}

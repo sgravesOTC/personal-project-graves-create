@@ -1,0 +1,42 @@
+{% load newshroom_tags %} {% load static %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/newshroom.css' %}" />
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="sidebar">
+        <h2 class="title">Newshroom</h2>
+        <p>Mushroom education, freshly foraged.</p>
+        <form
+          method="get"
+          action="{% url 'newshroom:article_search' %}"
+          class="sidebar-search"
+        >
+          <input
+            type="text"
+            name="query"
+            placeholder="Search..."
+            class="sidebar-search-input"
+          />
+          <button type="submit" class="sidebar-search-button">&#x2192;</button>
+        </form>
+        <p>{%total_articles%} articles foraged so far.</p>
+        <h2 class="title">Latest</h2>
+        {%show_latest 3%}
+      </div>
+      <main class="main-content">
+        {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+          <p class="message message--{{ message.tags }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+        {% endif %} {% block content %}{% endblock %}
+      </main>
+    </div>
+  </body>
+</html>
