@@ -141,3 +141,4 @@ def article_search(request):
             'results':results
         }
     )
+

@@ -1,0 +1,8 @@
+{% extends "newshroom/base.html" %}
+
+{% block title %}Register for the Undergrowth{% endblock title %}
+
+{% block content %}
+<h1>Register for the Undergrowth</h1>
+<p>Thanks for registering, {{ new_user.first_name }}. You can now <a href="{% url 'login' %}">enter the Undergrowth</a>.</p>
+{% endblock %}
