@@ -33,6 +33,7 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
+    'fairyring.apps.FairyringConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -134,3 +135,10 @@ EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
 DEFAULT_FROM_EMAIL= config('DEFAULT_FROM_EMAIL')
+
+# Tell Django where to send users after longin/logout
+# and where to redirect if they hit a login_required view
+# Use actual URL paths instead of named URLs for these settings
+LOGIN_REDIRECT_URL = '/fairyring/'
+LOGIN_URL = '/fairyring/login/'
+LOGOUT_URL = '/fairyring/logout/'

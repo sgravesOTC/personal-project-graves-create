@@ -28,6 +28,7 @@ sitemaps = {
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('newshroom/', include('newshroom.urls',namespace='newshroom')),
+    path('fairyring/', include('fairyring.urls')),  # new fairyring auth app
     path(
         'sitemap.xml',
         sitemap,

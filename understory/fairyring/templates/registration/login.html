@@ -1,0 +1,27 @@
+{% extends "newshroom/base.html" %}
+
+{% block title %}Log In{% endblock %}
+
+{% block content %}
+<div class="auth-form">
+  <h1>Step into the ring</h1>
+
+  {% if form.errors %}
+    <p class="message message--error">
+      Your username and password didn't match. Please try again.
+    </p>
+  {% else %}
+    <p>Enter your credentials to continue.</p>
+  {% endif %}
+
+  <form action="{% url 'fairyring:login' %}" method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}" />
+    <p><input type="submit" value="Log in"></p>
+  </form>
+
+  {# Link to password reset in case they've forgotten their credentials #}
+  <p><a href="{% url 'fairyring:password_reset' %}">Forgotten your password?</a></p>
+</div>
+{% endblock %}

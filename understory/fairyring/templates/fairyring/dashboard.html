@@ -1,0 +1,8 @@
+{% extends "newshroom/base.html" %}
+
+{% block title %}The Undergrowth{% endblock title %}
+
+{% block content %}
+<h1>The Undergrowth</h1>
+<p>You've stepped through the ring, {{ request.user.first_name|default:request.user.username }}. Welcome to the other side.</p>
+{% endblock %}
