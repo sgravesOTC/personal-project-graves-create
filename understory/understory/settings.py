@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'taggit',
     'newshroom.apps.NewshroomConfig',
+    'fairy_ring.apps.FairyRingConfig',
     'django.contrib.sites',
     'django.contrib.sitemaps',
 ]

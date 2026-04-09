@@ -27,11 +27,15 @@ sitemaps = {
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('newshroom/', include('newshroom.urls',namespace='newshroom')),
+    path('newshroom/', include('newshroom.urls', namespace='newshroom')),
+    path('fairy_ring/', include('fairy_ring.urls', namespace='fairy_ring')),
     path(
         'sitemap.xml',
         sitemap,
         {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'
     )
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
