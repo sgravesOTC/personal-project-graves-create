@@ -27,6 +27,8 @@ a:hover { text-decoration: underline; }
   position: sticky;
   top: 0;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar .title {
@@ -682,6 +684,35 @@ p {
 .sidebar-search-input {
     background: #1a1a1a;
     color: #fff;
+}
+
+.sidebar-auth {
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+.sidebar .sidebar-auth-link {
+  display: block;
+  background: none;
+  border: 1px solid #444;
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  color: #aaa;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  letter-spacing: 0.05em;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sidebar .sidebar-auth-link:hover {
+  border-color: #8a4cb1;
+  color: #fff;
+  text-decoration: none;
 }
 
 .sidebar-search {

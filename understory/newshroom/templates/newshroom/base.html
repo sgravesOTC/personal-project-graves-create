@@ -11,6 +11,10 @@
       <div class="sidebar">
         <h2 class="title"><a href="{% url 'newshroom:article_list' %}">Newshroom</a></h2>
         <p>Mushroom education, freshly foraged.</p>
+        {% if request.user.is_authenticated %}
+          <p>Welcome back, {{ request.user.first_name }}!</p>
+          <p><a href="{% url "fairy_ring:hollow" %}">Visit the Hollow</a></p>
+        {% endif %}
         <form
           method="get"
           action="{% url 'newshroom:article_search' %}"
@@ -27,7 +31,16 @@
         <p>{%total_articles%} articles foraged so far.</p>
         <h2 class="title">Latest</h2>
         {%show_latest 3%}
-        <p><a href="{% url 'fairy_ring:login' %}">Login</a></p>
+        <div class="sidebar-auth">
+          {% if request.user.is_authenticated %}
+            <form method="post" action="{% url 'fairy_ring:logout' %}" style="margin:0;padding:0;">
+              {% csrf_token %}
+              <button type="submit" class="sidebar-auth-link">Logout</button>
+            </form>
+          {% else %}
+            <a href="{% url 'fairy_ring:login' %}" class="sidebar-auth-link">Login</a>
+          {% endif %}
+        </div>
       </div>
       <main class="main-content">
         {% if messages %}
