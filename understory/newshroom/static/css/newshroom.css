@@ -34,6 +34,14 @@ a:hover { text-decoration: underline; }
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
   color: #fff;
+  text-decoration: none;
+}
+.sidebar .title:hover {
+  color: #8a4cb1;
+  text-decoration: none;
+}
+.sidebar .title:visited{
+  color: #fff;
 }
 
 .sidebar p {

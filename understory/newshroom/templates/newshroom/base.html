@@ -9,7 +9,7 @@
   <body>
     <div class="site-wrapper">
       <div class="sidebar">
-        <h2 class="title">Newshroom</h2>
+        <h2 class="title"><a href="{% url 'newshroom:article_list' %}">Newshroom</a></h2>
         <p>Mushroom education, freshly foraged.</p>
         <form
           method="get"
@@ -27,6 +27,7 @@
         <p>{%total_articles%} articles foraged so far.</p>
         <h2 class="title">Latest</h2>
         {%show_latest 3%}
+        <p><a href="{% url 'fairy_ring:login' %}">Login</a></p>
       </div>
       <main class="main-content">
         {% if messages %}
@@ -36,6 +37,7 @@
           {% endfor %}
         </div>
         {% endif %} {% block content %}{% endblock %}
+
       </main>
     </div>
   </body>
