@@ -6,10 +6,27 @@
     <div class="newsletter-container">
         <div class="newsletter-header">
             <span class="newsletter-label">Account</span>
-            <h2>Your Info</h2>
+            <h2>Your Profile</h2>
         </div>
-        <p><strong>First Name:</strong> {{ user.first_name }}</p>
-        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
+        {% if user.profile.photo %}
+            <img
+                src="{{ user.profile.photo.url }}"
+                alt="Profile photo of {{ user.first_name }}"
+                class="profile-photo"
+            />
+        {% else %}
+            <div class="profile-photo profile-photo--placeholder">
+                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+            </div>
+        {% endif %}
+        <div class="profile-fields">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>First Name:</strong> {{ user.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            {% if user.profile.birthday %}
+                <p><strong>Birthday:</strong> {{ user.profile.birthday|date:"F j, Y" }}</p>
+            {% endif %}
+        </div>
     </div>
 {% endblock content %}

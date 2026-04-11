@@ -182,6 +182,40 @@ p {
   .sidebar { width: 100%; height: auto; position: static; }
 }
 
+/* === Profile Photo === */
+
+.profile-photo {
+  display: block;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  margin: 0 0 1.75rem 0;
+  background-color: #f5f0e8;
+  border: 5px solid #342142;
+  box-shadow:
+    inset 0 0 6px rgba(0,0,0,0.2),
+    4px 4px 14px rgba(0,0,0,0.2);
+}
+
+.profile-photo--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  font-size: 2.5rem;
+  color: #fff;
+  background-color: #8a4cb1;
+  letter-spacing: 0.05em;
+}
+
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
 /* === Newsletter Page === */
 
 .newsletter-container {

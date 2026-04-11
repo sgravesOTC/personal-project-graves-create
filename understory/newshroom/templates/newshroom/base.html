@@ -15,6 +15,7 @@
           <p>Welcome back, {{ request.user.first_name }}!</p>
           {% if section == 'fairy_ring' %}
           <p><a href="{% url 'fairy_ring:password_change' %}">Change Password</a></p>
+          <p><a href="{% url 'fairy_ring:edit' %}">Edit Profile</a></p>
           {% else %}
           <p><a href="{% url 'fairy_ring:fairy_ring' %}">Visit the Fairy Ring</a></p>
           {% endif %}

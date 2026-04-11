@@ -18,4 +18,5 @@ urlpatterns = [
     #URLS
     path('',views.fairy_ring, name='fairy_ring'),
     path('register/', views.register, name='register'),
+    path('edit/', views.edit, name='edit'),
 ]

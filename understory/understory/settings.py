@@ -141,3 +141,8 @@ DEFAULT_FROM_EMAIL= config('DEFAULT_FROM_EMAIL')
 LOGIN_REDIRECT_URL = '/fairy_ring/'
 LOGIN_URL = '/fairy_ring/login/'
 LOGOUT_URL = '/fairy_ring/logout/'
+
+# Media
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
