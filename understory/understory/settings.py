@@ -150,6 +150,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Authentication
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrinb.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
     'fairy_ring.authentication.EmailAuthBackend',
 ]
