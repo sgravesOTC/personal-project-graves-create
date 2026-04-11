@@ -29,12 +29,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('newshroom/', include('newshroom.urls', namespace='newshroom')),
     path('fairy_ring/', include('fairy_ring.urls', namespace='fairy_ring')),
+    path('sporeprint/', include('sporeprint.urls', namespace='sporeprint')),
     path(
         'sitemap.xml',
         sitemap,
         {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'
-    )
+    ),
 ]
 
 if settings.DEBUG:

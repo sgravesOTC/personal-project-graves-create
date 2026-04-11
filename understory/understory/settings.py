@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'taggit',
+    'easy_thumbnails',
     'newshroom.apps.NewshroomConfig',
+    'sporeprint.apps.SporeprintConfig',
     'fairy_ring.apps.FairyRingConfig',
     'django.contrib.sites',
     'django.contrib.sitemaps',
@@ -153,3 +155,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'fairy_ring.authentication.EmailAuthBackend',
 ]
+
+# Thumbnail Settings
+
+THUMBNAIL_ALIASES = {}
