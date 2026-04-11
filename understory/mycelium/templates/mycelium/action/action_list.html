@@ -1,0 +1,33 @@
+{% for action in actions %}
+<div class="action">
+    <div class="action-user">
+        {% if action.user.profile.photo %}
+            <img src="{{ action.user.profile.photo.url }}" alt="{{ action.user.first_name }}" class="action-avatar" />
+        {% else %}
+            <div class="action-avatar action-avatar--placeholder">
+                {{ action.user.first_name|first|upper }}{{ action.user.last_name|first|upper }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="action-body">
+        <span class="action-username">
+            <a href="{% url 'fairy_ring:forager_detail' username=action.user.username %}">
+                {{ action.user.first_name }} {{ action.user.last_name }}
+            </a>
+        </span>
+        <span class="action-verb">{{ action.verb }}</span>
+        {% if action.target %}
+            {% with target=action.target %}
+                {% if target.get_absolute_url %}
+                    <a href="{{ target.get_absolute_url }}" class="action-target">{{ target }}</a>
+                {% else %}
+                    <span class="action-target">{{ target }}</span>
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+        <span class="action-time">{{ action.created|timesince }} ago</span>
+    </div>
+</div>
+{% empty %}
+<p>No recent activity.</p>
+{% endfor %}

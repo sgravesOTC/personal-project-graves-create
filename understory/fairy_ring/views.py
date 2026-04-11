@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from mycelium.utils import create_action
+from mycelium.models import Action
 
 # Create your views here.
 User = get_user_model()
@@ -15,10 +16,24 @@ User = get_user_model()
 @login_required
 def fairy_ring(request):
     specimens = Specimen.objects.filter(collector=request.user)
+
+    following_ids = ForagerConnection.objects.filter(
+        forager_from = request.user
+    ).values_list('forager_to_id', flat = True)
+
+    if following_ids:
+        actions = Action.objects.filter(
+            user_id__in = following_ids
+        ).select_related('user','user__profile')
+    else:
+        actions = Action.objects.filter(user=request.user)
+    
+    actions = actions[:20]
+
     return render(
         request,
         'fairy_ring/fairy_ring.html',
-        {'section': 'fairy_ring', 'specimens': specimens}
+        {'section': 'fairy_ring', 'specimens': specimens, 'actions' : actions}
     )
 
 def register(request):
@@ -129,10 +144,15 @@ def forager_detail(request, username):
 
     specimens = profile_user.sporeprint_collected.all()[:12]
 
+    actions = Action.objects.filter(
+        user=profile_user
+    ).select_related('user', 'user__profile')[:20]
+
     return render(request, 'fairy_ring/forager_detail.html', {
         'profile_user': profile_user,
         'profile': profile,
         'is_following': is_following,
         'specimens': specimens,
+        'actions': actions,
         'section': 'foragers'
     })
