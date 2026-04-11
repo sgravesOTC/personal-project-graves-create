@@ -146,3 +146,10 @@ LOGOUT_URL = '/fairy_ring/logout/'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Authentication
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrinb.auth.backends.ModelBackend',
+    'fairy_ring.authentication.EmailAuthBackend',
+]
