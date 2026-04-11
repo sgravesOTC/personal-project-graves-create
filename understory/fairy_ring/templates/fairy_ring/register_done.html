@@ -1,0 +1,7 @@
+{% extends "newshroom/base.html" %}
+{% block title %}Registration Complete{% endblock %}
+{% block content %}
+    <h1>Welcome, {{ new_user.first_name }}!</h1>
+    <p>Your account has been created successfully.</p>
+    <p><a href="{% url 'fairy_ring:login' %}">Log in now</a></p>
+{% endblock content %}

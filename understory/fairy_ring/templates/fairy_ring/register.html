@@ -1,0 +1,12 @@
+{% extends "newshroom/base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+    <h1>Create an Account</h1>
+    <p>Please fill out the form below to register.</p>
+    <form method="post" action="{% url 'fairy_ring:register' %}">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'fairy_ring:login' %}">Log in</a></p>
+{% endblock content %}
