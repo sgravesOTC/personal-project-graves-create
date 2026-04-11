@@ -53,15 +53,28 @@ articleSpotBtn.addEventListener('click', function() {
 
 {% block content %}
     <h1>{{article.title}}</h1>
-
-    <p class="date">
-        Published {{ article.publish}} by {{article.author.first_name}} {{article.author.last_name}}
-    </p>
-      <img
+    
+    <img
     src="{{ article.image.url }}"
     class="mushroom-photo"
     alt="{{ article.title }}"
   />
+
+    <div class="author-section">
+        {% if article.author.profile.photo %}
+            <img
+                src="{{ article.author.profile.photo.url }}"
+                class="sporeprint-thumb"
+                alt="{{ article.author.first_name }} {{ article.author.last_name }}"
+            />
+        {% endif %}
+        <div class="author-info">
+            <p class="date">
+                Published {{ article.publish}} by {{article.author.first_name}} {{article.author.last_name}}
+            </p>
+        </div>
+    </div>
+
     {{article.body|markdown}}
 
     <div class="sporeprint-spot-wrapper">
