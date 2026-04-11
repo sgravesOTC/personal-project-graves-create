@@ -13,7 +13,11 @@
         <p>Mushroom education, freshly foraged.</p>
         {% if request.user.is_authenticated %}
           <p>Welcome back, {{ request.user.first_name }}!</p>
-          <p><a href="{% url "fairy_ring:hollow" %}">Visit the Hollow</a></p>
+          {% if section == 'fairy_ring' %}
+          <p><a href="{% url 'fairy_ring:password_change' %}">Change Password</a></p>
+          {% else %}
+          <p><a href="{% url 'fairy_ring:fairy_ring' %}">Visit the Fairy Ring</a></p>
+          {% endif %}
         {% endif %}
         <form
           method="get"

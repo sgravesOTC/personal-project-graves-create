@@ -16,5 +16,6 @@
             <input type="hidden" name="next" value="{{ next }}" />
             <button type="submit">Login</button>
         </form>
+        <p><a href="{% url 'fairy_ring:password_reset' %}">Forgot password?</a></p>
     {% endif %}
 {% endblock content %}

@@ -1,0 +1,15 @@
+{% extends "newshroom/base.html" %}
+{% block title %}Fairy Ring{% endblock %}
+{% block content %}
+    <h1>The Fairy Ring</h1>
+    <p>Welcome to the Fairy Ring, {{ user.first_name }}! This is a secret area of the fairy ring where you can find hidden treasures and rare mushrooms. Explore the mysteries of the forest and discover what lies within!</p>
+    <div class="newsletter-container">
+        <div class="newsletter-header">
+            <span class="newsletter-label">Account</span>
+            <h2>Your Info</h2>
+        </div>
+        <p><strong>First Name:</strong> {{ user.first_name }}</p>
+        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+{% endblock content %}
