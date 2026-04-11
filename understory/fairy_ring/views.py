@@ -7,6 +7,7 @@ from sporeprint.models import Specimen
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
+from mycelium.utils import create_action
 
 # Create your views here.
 User = get_user_model()
@@ -28,6 +29,7 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             Profile.objects.create(user=new_user)
+            create_action(new_user, 'created an account')
             return render(
                 request,
                 'fairy_ring/register_done.html',
@@ -56,6 +58,7 @@ def edit(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            create_action(request.user, 'updated their profile')
             messages.success(
                 request,
                 'Profile updated successfully!'
@@ -91,6 +94,7 @@ def forager_follow(request):
                 forager_from=request.user,
                 forager_to=target_user
             )
+            create_action(request.user, 'is now following', target_user)
         elif action == 'unfollow':
             ForagerConnection.objects.filter(
                 forager_from=request.user,

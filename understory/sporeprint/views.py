@@ -8,6 +8,7 @@ from .models import Specimen
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from mycelium.utils import create_action
 
 # Create your views here.
 
@@ -45,6 +46,7 @@ def specimen_create(request):
                 return render(request, 'sporeprint/create.html', {'form': form})
 
         specimen.save()
+        create_action(request.user, 'collected', specimen)
         messages.success(request, f'"{specimen.title}" has been added to your field notes.')
         return redirect(specimen.get_absolute_url())
     return render(request, 'sporeprint/create.html', {'form': form, 'section': 'create'})
@@ -85,6 +87,7 @@ def specimen_edit(request, id, slug):
                 return render(request, 'sporeprint/edit.html', {'form': form, 'specimen': specimen})
 
         specimen.save()
+        create_action(request.user, 'updated', specimen)
         messages.success(request, f'"{specimen.title}" has been updated.')
         return redirect(specimen.get_absolute_url())
     return render(request, 'sporeprint/edit.html', {'form': form, 'specimen': specimen})
@@ -112,7 +115,8 @@ def specimen_like(request):
         if action == 'spot':
             specimen.spotted_by.add(request.user)
             specimen.total_spots += 1
-        
+            create_action(request.user, 'spotted', specimen)
+
         elif action == 'unspot':
             specimen.spotted_by.remove(request.user)
             specimen.total_spots -= 1
