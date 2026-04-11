@@ -5,6 +5,7 @@
 
 {% block domready %}
 {% if request.user.is_authenticated %}
+{# JavaScript for spot button functionality #}
 const articleSpotBtn = document.getElementById('article-spot-btn');
 const articleSpotCount = document.getElementById('article-spot-count');
 
@@ -54,20 +55,24 @@ articleSpotBtn.addEventListener('click', function() {
 {% block content %}
     <h1>{{article.title}}</h1>
     
+    <!-- Featured image for the article -->
     <img
     src="{{ article.image.url }}"
     class="mushroom-photo"
     alt="{{ article.title }}"
   />
 
+    <!-- Author information section with profile photo -->
     <div class="author-section">
         {% if article.author.profile.photo %}
+            <!-- Author's profile picture (circular thumbnail) -->
             <img
                 src="{{ article.author.profile.photo.url }}"
                 class="sporeprint-thumb"
                 alt="{{ article.author.first_name }} {{ article.author.last_name }}"
             />
         {% endif %}
+        <!-- Publication metadata -->
         <div class="author-info">
             <p class="date">
                 Published {{ article.publish}} by {{article.author.first_name}} {{article.author.last_name}}
@@ -75,10 +80,13 @@ articleSpotBtn.addEventListener('click', function() {
         </div>
     </div>
 
+    <!-- Article content (rendered from markdown) -->
     {{article.body|markdown}}
 
+    <!-- Spot button and counter for tracking reading engagement -->
     <div class="sporeprint-spot-wrapper">
         {% if request.user.is_authenticated %}
+            <!-- Allow authenticated users to mark articles they found useful -->
             <button
                 id="article-spot-btn"
                 class="sporeprint-spot-btn {% if user_has_spotted %}spotted{% endif %}"
@@ -88,19 +96,23 @@ articleSpotBtn.addEventListener('click', function() {
                 {% if user_has_spotted %}✓ Spotted{% else %}+ Spot this{% endif %}
             </button>
         {% else %}
+            <!-- Prompt non-authenticated users to log in -->
             <a href="{% url 'fairy_ring:login' %}?next={{ request.path }}">Log in to spot this article</a>
         {% endif %}
+        <!-- Display total engagement metric -->
         <span id="article-spot-count" class="sporeprint-spot-count">
             {{ article.total_spots }} spot{{ article.total_spots|pluralize }}
         </span>
     </div>
 
+    <!-- Allow users to recommend articles to others -->
     <p>
         <a href="{% url "newshroom:news_letter" article.id %}">
         Share this article
         </a>
     </p>
 
+    <!-- Recommend similar articles based on shared tags -->
 <div class="similar-articles">
   <h2>Similar Articles</h2>
   {% for article in similar_articles %}
