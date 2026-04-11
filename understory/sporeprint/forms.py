@@ -24,19 +24,6 @@ class SpecimenCreateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['source_url'].required = False
 
-    def clean_source_url(self):
-        source_url = self.cleaned_data.get('source_url')
-        if not source_url:
-            return source_url
-        valid_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp']
-        extension = source_url.rsplit('.', 1)[-1].lower()
-        if extension not in valid_extensions:
-            raise forms.ValidationError(
-                'That URL does not appear to point to a valid image file. '
-                'Please use a direct link ending in .jpg, .png, .gif, or .webp.'
-            )
-        return source_url
-
     def clean(self):
         cleaned_data = super().clean()
         source_url = cleaned_data.get('source_url')
@@ -69,19 +56,6 @@ class SpecimenEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['source_url'].required = False
-
-    def clean_source_url(self):
-        source_url = self.cleaned_data.get('source_url')
-        if not source_url:
-            return source_url
-        valid_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp']
-        extension = source_url.rsplit('.', 1)[-1].lower()
-        if extension not in valid_extensions:
-            raise forms.ValidationError(
-                'That URL does not appear to point to a valid image file. '
-                'Please use a direct link ending in .jpg, .png, .gif, or .webp.'
-            )
-        return source_url
 
     def clean(self):
         cleaned_data = super().clean()

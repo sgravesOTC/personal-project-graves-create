@@ -4,9 +4,12 @@ from django.contrib import messages
 from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Profile, ForagerConnection
 from sporeprint.models import Specimen
+from newshroom.models import Article
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from mycelium.utils import create_action
 from mycelium.models import Action
 
@@ -21,12 +24,10 @@ def fairy_ring(request):
         forager_from = request.user
     ).values_list('forager_to_id', flat = True)
 
-    if following_ids:
-        actions = Action.objects.filter(
-            user_id__in = following_ids
-        ).select_related('user','user__profile')
-    else:
-        actions = Action.objects.filter(user=request.user)
+    user_ids = list(following_ids) + [request.user.id]
+    actions = Action.objects.filter(
+        user_id__in=user_ids
+    ).select_related('user', 'user__profile', 'content_type')
     
     actions = actions[:20]
 
@@ -110,6 +111,7 @@ def forager_follow(request):
                 forager_to=target_user
             )
             create_action(request.user, 'is now following', target_user)
+            create_action(target_user, 'was followed by', request.user)
         elif action == 'unfollow':
             ForagerConnection.objects.filter(
                 forager_from=request.user,
@@ -144,9 +146,17 @@ def forager_detail(request, username):
 
     specimens = profile_user.sporeprint_collected.all()[:12]
 
+    specimen_ct = ContentType.objects.get_for_model(Specimen)
+    specimen_ids = profile_user.sporeprint_collected.values_list('id', flat=True)
+
+    article_ct = ContentType.objects.get_for_model(Article)
+    article_ids = profile_user.newshroom_articles.values_list('id', flat=True)
+
     actions = Action.objects.filter(
-        user=profile_user
-    ).select_related('user', 'user__profile')[:20]
+        Q(user=profile_user) |
+        Q(content_type=specimen_ct, object_id__in=specimen_ids) |
+        Q(content_type=article_ct, object_id__in=article_ids)
+    ).select_related('user', 'user__profile', 'content_type').distinct()[:20]
 
     return render(request, 'fairy_ring/forager_detail.html', {
         'profile_user': profile_user,

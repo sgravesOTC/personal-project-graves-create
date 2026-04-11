@@ -51,11 +51,11 @@
                 {% for specimen in specimens %}
                     <div class="sporeprint-entry">
                         <a href="{{ specimen.get_absolute_url }}">
-                            <img
-                                src="{{ specimen.image.url }}"
-                                alt="{{ specimen.title }}"
-                                class="sporeprint-thumb"
-                            />
+                            {% if specimen.image %}
+                              <img src="{{ specimen.image.url }}" alt="{{ specimen.title }}" class="sporeprint-thumb" />
+                            {% else %}
+                              <img src="{{ specimen.source_url }}" alt="{{ specimen.title }}" class="sporeprint-thumb" />
+                            {% endif %}
                             <span>{{ specimen.title }}</span>
                         </a>
                         <span class="sporeprint-date">{{ specimen.collected_on|date:"M j, Y" }}</span>

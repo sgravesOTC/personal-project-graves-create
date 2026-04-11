@@ -2,7 +2,11 @@
   {# One card per specimen — clicking the title/image navigates to the detail page #}
   <div class="specimen-card">
     <a href="{{ specimen.get_absolute_url }}">
-      <img src="{{ specimen.image.url }}" alt="{{ specimen.title }}">
+      {% if specimen.image %}
+        <img src="{{ specimen.image.url }}" alt="{{ specimen.title }}">
+      {% else %}
+        <img src="{{ specimen.source_url }}" alt="{{ specimen.title }}">
+      {% endif %}
     </a>
     <div class="specimen-card-info">
       <h2><a href="{{ specimen.get_absolute_url }}">{{ specimen.title }}</a></h2>

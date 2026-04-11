@@ -4,15 +4,18 @@ from django.contrib.postgres.search import (SearchVector,SearchQuery,SearchRank)
 from django.views.decorators.http import require_POST
 from django.db.models import Count
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.http import JsonResponse
 from taggit.models import Tag
 from .models import Article
 from .forms import NewsLetterForm, RequestForm,SearchForm
+from mycelium.utils import create_action
 
 
 # Create your views here.
 def article_list(request, tag_slug = None):
-    article_list = Article.publisher.all()
+    article_list = Article.publisher.select_related('author').prefetch_related('tags').all()
     tag = None
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
@@ -27,15 +30,19 @@ def article_list(request, tag_slug = None):
         articles = paginator.page(paginator.num_pages)
     except PageNotAnInteger:
         articles = paginator.page(1)
+    spotted_ids = (
+        set(request.user.newshroom_spotted.values_list('id', flat=True))
+        if request.user.is_authenticated else set()
+    )
     return render(
         request,
         'newshroom/article/list.html',
-        {'articles':articles,'form':form, 'tag':tag}
+        {'articles': articles, 'form': form, 'tag': tag, 'spotted_ids': spotted_ids}
     )
 
 def article_detail(request, year, month, article):
     article = get_object_or_404(
-        Article,
+        Article.objects.select_related('author'),
         status = Article.Status.PUBLISHED,
         slug = article,
         publish__year=year,
@@ -50,12 +57,16 @@ def article_detail(request, year, month, article):
         same_tags=Count('tags')
     ).order_by('-same_tags','-publish')[:4]
 
+    user_has_spotted = (
+        request.user.is_authenticated and article.spotted_by.filter(id=request.user.id).exists()
+    )
     return render(
         request,
         'newshroom/article/detail.html',
         {
-            'article':article,
-            'similar_articles':similar_articles
+            'article': article,
+            'similar_articles': similar_articles,
+            'user_has_spotted': user_has_spotted,
         }
     )
 
@@ -127,7 +138,7 @@ def article_search(request):
             search_vector = SearchVector('title','body')
             search_query = SearchQuery(query)
             results = (
-                Article.publisher.annotate(
+                Article.publisher.select_related('author').annotate(
                     search = search_vector,
                     rank = SearchRank(search_vector,search_query)
                 )
@@ -141,3 +152,27 @@ def article_search(request):
             'results':results
         }
     )
+
+
+@login_required
+@require_POST
+def article_like(request):
+    article_id = request.POST.get('id')
+    action = request.POST.get('action')
+
+    if article_id and action:
+        article = get_object_or_404(Article, id=article_id)
+
+        if action == 'spot':
+            article.spotted_by.add(request.user)
+            article.total_spots += 1
+            create_action(request.user, 'spotted', article)
+
+        elif action == 'unspot':
+            article.spotted_by.remove(request.user)
+            article.total_spots -= 1
+
+        article.save()
+        return JsonResponse({'status': 'ok', 'total_spots': article.total_spots})
+
+    return JsonResponse({'status': 'error'}, status=400)

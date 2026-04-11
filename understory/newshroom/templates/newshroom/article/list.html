@@ -9,11 +9,26 @@
 <ul>
 {% for article in articles %}
 <li class="list-item">
-  <img
-    src="{{ article.image.url }}"
-    class="mushroom-photo"
-    alt="{{ article.title }}"
-  />
+  <div class="article-image-wrap">
+    <img
+      src="{{ article.image.url }}"
+      class="mushroom-photo"
+      alt="{{ article.title }}"
+    />
+    {% if request.user.is_authenticated %}
+      <div class="article-spot-wrap">
+        <button
+          type="button"
+          class="sporeprint-spot-btn article-spot-btn {% if article.id in spotted_ids %}spotted{% endif %}"
+          data-id="{{ article.id }}"
+          data-action="{% if article.id in spotted_ids %}unspot{% else %}spot{% endif %}"
+        >
+          {% if article.id in spotted_ids %}&#10003; Spotted{% else %}+ Spot{% endif %}
+        </button>
+        <span class="sporeprint-spot-count">{{ article.total_spots }} spot{{ article.total_spots|pluralize }}</span>
+      </div>
+    {% endif %}
+  </div>
   <a href="{{ article.get_absolute_url }}">
     {{ article.title }}
   </a>
@@ -88,4 +103,52 @@
   {% endif %}
 
 </div>
+{% endblock %}
+
+{% block domready %}
+{% if request.user.is_authenticated %}
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(function(cookie) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
+document.querySelectorAll('.article-spot-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        const action = btn.dataset.action;
+        const countEl = btn.closest('.article-spot-wrap').querySelector('.sporeprint-spot-count');
+        fetch('{% url "newshroom:article_like" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: `id=${btn.dataset.id}&action=${action}`,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                const count = data.total_spots;
+                countEl.textContent = `${count} spot${count !== 1 ? 's' : ''}`;
+                if (action === 'spot') {
+                    btn.textContent = '✓ Spotted';
+                    btn.classList.add('spotted');
+                    btn.dataset.action = 'unspot';
+                } else {
+                    btn.textContent = '+ Spot';
+                    btn.classList.remove('spotted');
+                    btn.dataset.action = 'spot';
+                }
+            }
+        });
+    });
+});
+{% endif %}
 {% endblock %}

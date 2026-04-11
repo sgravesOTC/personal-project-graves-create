@@ -865,6 +865,83 @@ p {
   white-space: nowrap;
 }
 
+/* === Article Spot Button === */
+
+.article-spot-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+/* === Activity Feed === */
+
+.action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.action {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.action-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  flex-shrink: 0;
+  border: 3px solid #342142;
+  background-color: #f5f0e8;
+}
+
+.action-avatar--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: #8a4cb1;
+  letter-spacing: 0.05em;
+}
+
+.action-body {
+  font-family: sans-serif;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+  line-height: 1.5;
+}
+
+.action-username {
+  font-weight: 600;
+}
+
+.action-verb {
+  color: #555;
+  margin: 0 0.2rem;
+}
+
+.action-target {
+  color: #8a4cb1;
+  text-decoration: none;
+}
+
+.action-target:hover {
+  text-decoration: underline;
+}
+
+.action-time {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 0.1rem;
+}
+
 /* === Sporeprint Detail Page === */
 .sporeprint-detail {
   display: flex;

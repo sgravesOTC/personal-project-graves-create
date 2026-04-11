@@ -11,4 +11,5 @@ urlpatterns = [
     path('request/', views.shroom_request, name='shroom_request'),
     path('tag/<slug:tag_slug>/', views.article_list, name='article_list_by_tag'),
     path('search/', views.article_search, name='article_search'),
+    path('like/', views.article_like, name='article_like'),
 ]

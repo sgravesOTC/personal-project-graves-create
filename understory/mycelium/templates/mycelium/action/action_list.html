@@ -1,8 +1,20 @@
 {% for action in actions %}
 <div class="action">
     <div class="action-user">
-        {% if action.user.profile.photo %}
-            <img src="{{ action.user.profile.photo.url }}" alt="{{ action.user.first_name }}" class="action-avatar" />
+        {% if action.target.username %}
+            {% if action.target.profile.photo %}
+                <img src="{{ action.target.profile.photo.url }}" alt="{{ action.target.get_full_name|default:action.target.username }}" class="action-avatar" />
+            {% else %}
+                <div class="action-avatar action-avatar--placeholder">
+                    {{ action.target.first_name|first|upper }}{{ action.target.last_name|first|upper }}
+                </div>
+            {% endif %}
+        {% elif action.target.image %}
+            <img src="{{ action.target.image.url }}" alt="{{ action.target.title }}" class="action-avatar" />
+        {% elif action.target.source_url %}
+            <img src="{{ action.target.source_url }}" alt="{{ action.target.title }}" class="action-avatar" />
+        {% elif action.user.profile.photo %}
+            <img src="{{ action.user.profile.photo.url }}" alt="{{ action.user.get_full_name|default:action.user.username }}" class="action-avatar" />
         {% else %}
             <div class="action-avatar action-avatar--placeholder">
                 {{ action.user.first_name|first|upper }}{{ action.user.last_name|first|upper }}
@@ -12,7 +24,7 @@
     <div class="action-body">
         <span class="action-username">
             <a href="{% url 'fairy_ring:forager_detail' username=action.user.username %}">
-                {{ action.user.first_name }} {{ action.user.last_name }}
+                {{ action.user.get_full_name|default:action.user.username }}
             </a>
         </span>
         <span class="action-verb">{{ action.verb }}</span>
@@ -20,6 +32,8 @@
             {% with target=action.target %}
                 {% if target.get_absolute_url %}
                     <a href="{{ target.get_absolute_url }}" class="action-target">{{ target }}</a>
+                {% elif target.username %}
+                    <a href="{% url 'fairy_ring:forager_detail' username=target.username %}" class="action-target">{{ target.get_full_name|default:target.username }}</a>
                 {% else %}
                     <span class="action-target">{{ target }}</span>
                 {% endif %}

@@ -33,6 +33,13 @@ class Article(models.Model):
         choices=Status,
         default=Status.DRAFT
     )
+    spotted_by = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='newshroom_spotted',
+        blank=True,
+    )
+    total_spots = models.PositiveIntegerField(default=0)
+
     tags = TaggableManager()
 
     objects = models.Manager()

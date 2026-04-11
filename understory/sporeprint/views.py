@@ -53,7 +53,7 @@ def specimen_create(request):
 
 
 def specimen_detail(request, id, slug):
-    specimen = get_object_or_404(Specimen, id=id, slug=slug)
+    specimen = get_object_or_404(Specimen.objects.select_related('collector'), id=id, slug=slug)
     user_has_spotted = (
         request.user.is_authenticated and specimen.spotted_by.filter(id=request.user.id).exists()
     )
@@ -128,7 +128,7 @@ def specimen_like(request):
     return JsonResponse({'status':'error'}, status=400)
 
 def specimen_list(request):
-    all_specimens = Specimen.objects.all()
+    all_specimens = Specimen.objects.select_related('collector').all()
     paginator = Paginator(all_specimens, 8)
     page = request.GET.get('page',1)
 

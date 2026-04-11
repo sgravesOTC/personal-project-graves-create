@@ -3,6 +3,54 @@
 
 {% block title %}{{article.title}}{% endblock %}
 
+{% block domready %}
+{% if request.user.is_authenticated %}
+const articleSpotBtn = document.getElementById('article-spot-btn');
+const articleSpotCount = document.getElementById('article-spot-count');
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(function(cookie) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
+articleSpotBtn.addEventListener('click', function() {
+    const action = this.dataset.action;
+    fetch('{% url "newshroom:article_like" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: `id=${this.dataset.id}&action=${action}`,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            const count = data.total_spots;
+            articleSpotCount.textContent = `${count} spot${count !== 1 ? 's' : ''}`;
+            if (action === 'spot') {
+                articleSpotBtn.textContent = '✓ Spotted';
+                articleSpotBtn.classList.add('spotted');
+                articleSpotBtn.dataset.action = 'unspot';
+            } else {
+                articleSpotBtn.textContent = '+ Spot this';
+                articleSpotBtn.classList.remove('spotted');
+                articleSpotBtn.dataset.action = 'spot';
+            }
+        }
+    });
+});
+{% endif %}
+{% endblock %}
+
 {% block content %}
     <h1>{{article.title}}</h1>
 
@@ -15,6 +63,24 @@
     alt="{{ article.title }}"
   />
     {{article.body|markdown}}
+
+    <div class="sporeprint-spot-wrapper">
+        {% if request.user.is_authenticated %}
+            <button
+                id="article-spot-btn"
+                class="sporeprint-spot-btn {% if user_has_spotted %}spotted{% endif %}"
+                data-id="{{ article.id }}"
+                data-action="{% if user_has_spotted %}unspot{% else %}spot{% endif %}"
+            >
+                {% if user_has_spotted %}✓ Spotted{% else %}+ Spot this{% endif %}
+            </button>
+        {% else %}
+            <a href="{% url 'fairy_ring:login' %}?next={{ request.path }}">Log in to spot this article</a>
+        {% endif %}
+        <span id="article-spot-count" class="sporeprint-spot-count">
+            {{ article.total_spots }} spot{{ article.total_spots|pluralize }}
+        </span>
+    </div>
 
     <p>
         <a href="{% url "newshroom:news_letter" article.id %}">

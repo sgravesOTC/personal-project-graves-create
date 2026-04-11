@@ -6,7 +6,11 @@
   <div class="sporeprint-detail">
 
     <div class="sporeprint-detail-image">
-      <img src="{{ specimen.image.url }}" class="mushroom-photo" alt="{{ specimen.title }}">
+      {% if specimen.image %}
+        <img src="{{ specimen.image.url }}" class="mushroom-photo" alt="{{ specimen.title }}">
+      {% else %}
+        <img src="{{ specimen.source_url }}" class="mushroom-photo" alt="{{ specimen.title }}">
+      {% endif %}
     </div>
 
     <div class="sporeprint-detail-info">
