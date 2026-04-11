@@ -1,0 +1,35 @@
+{% extends "newshroom/base.html" %}
+{% block title %}Foragers{% endblock %}
+{% block content %}
+    <h1>Browse Foragers</h1>
+    <div class="newsletter-container">
+        <div class="newsletter-header">
+            <span class="newsletter-label">Community</span>
+            <h2>Fellow Foragers</h2>
+        </div>
+        {% if foragers %}
+            <div class="sporeprint-list">
+                {% for forager in foragers %}
+                    <div class="sporeprint-entry">
+                        <a href="{% url 'fairy_ring:forager_detail' forager.user.username %}">
+                            {% if forager.photo %}
+                                <img
+                                    src="{{ forager.photo.url }}"
+                                    alt="Profile photo of {{ forager.user.first_name }}"
+                                    class="sporeprint-thumb"
+                                />
+                            {% else %}
+                                <div class="profile-photo profile-photo--placeholder">
+                                    {{ forager.user.first_name|first|upper }}{{ forager.user.last_name|first|upper }}
+                                </div>
+                            {% endif %}
+                            <span>{{ forager.user.get_full_name|default:forager.user.username }}</span>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No foragers found.</p>
+        {% endif %}
+    </div>
+{% endblock content %}

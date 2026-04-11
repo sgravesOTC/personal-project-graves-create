@@ -8,7 +8,7 @@ class Specimen(models.Model):
     collector = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name = 'sporebrint_collected'
+        related_name = 'sporeprint_collected'
     )
 
     spotted_by = models.ManyToManyField(

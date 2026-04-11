@@ -16,7 +16,10 @@ urlpatterns = [
     path('password-reset/complete/', auth_views.PasswordResetCompleteView.as_view(template_name='fairy_ring/password_reset_complete.html'), name='password_reset_complete'),
 
     #URLS
-    path('',views.fairy_ring, name='fairy_ring'),
+    path('', views.fairy_ring, name='fairy_ring'),
     path('register/', views.register, name='register'),
     path('edit/', views.edit, name='edit'),
+    path('foragers/', views.forager_list, name='forager_list'),
+    path('foragers/<str:username>/', views.forager_detail, name='forager_detail'),
+    path('forager-follow/', views.forager_follow, name='forager_follow'),
 ]

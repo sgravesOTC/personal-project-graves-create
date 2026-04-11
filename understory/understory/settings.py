@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'newshroom.apps.NewshroomConfig',
     'sporeprint.apps.SporeprintConfig',
     'fairy_ring.apps.FairyRingConfig',
+    'mycelium.apps.MyceliumConfig',
     'django.contrib.sites',
     'django.contrib.sitemaps',
 ]
