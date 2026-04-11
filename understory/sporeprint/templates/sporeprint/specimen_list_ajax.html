@@ -1,0 +1,24 @@
+{% for specimen in specimens %}
+  {# One card per specimen — clicking the title/image navigates to the detail page #}
+  <div class="specimen-card">
+    <a href="{{ specimen.get_absolute_url }}">
+      <img src="{{ specimen.image.url }}" alt="{{ specimen.title }}">
+    </a>
+    <div class="specimen-card-info">
+      <h2><a href="{{ specimen.get_absolute_url }}">{{ specimen.title }}</a></h2>
+      <p class="date">{{ specimen.collected_on }}</p>
+      <div class="specimen-card-spot">
+        {% if request.user.is_authenticated %}
+          <button
+            class="sporeprint-spot-btn specimen-spot-btn {% if specimen.id in spotted_ids %}spotted{% endif %}"
+            data-id="{{ specimen.id }}"
+            data-action="{% if specimen.id in spotted_ids %}unspot{% else %}spot{% endif %}"
+          >
+            {% if specimen.id in spotted_ids %}&#10003; Spotted{% else %}+ Spot{% endif %}
+          </button>
+        {% endif %}
+        <span class="sporeprint-spot-count">{{ specimen.total_spots }} spot{{ specimen.total_spots|pluralize }}</span>
+      </div>
+    </div>
+  </div>
+{% endfor %}

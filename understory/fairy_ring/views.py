@@ -3,14 +3,17 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Profile
+from sporeprint.models import Specimen
 
 # Create your views here.
 
+@login_required
 def fairy_ring(request):
+    specimens = Specimen.objects.filter(collector=request.user)
     return render(
         request,
         'fairy_ring/fairy_ring.html',
-        {'section':'fairy_ring'}
+        {'section': 'fairy_ring', 'specimens': specimens}
     )
 
 def register(request):

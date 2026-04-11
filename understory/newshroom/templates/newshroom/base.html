@@ -18,6 +18,7 @@
           <p><a href="{% url 'fairy_ring:edit' %}">Edit Profile</a></p>
           {% else %}
           <p><a href="{% url 'fairy_ring:fairy_ring' %}">Visit the Fairy Ring</a></p>
+          <p><a href="{% url 'sporeprint:specimen_list' %}">Browse the Collection</a></p>
           {% endif %}
         {% endif %}
         <form
@@ -58,5 +59,12 @@
 
       </main>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        {% block domready %}
+        {% endblock %}
+      });
+    </script>
   </body>
 </html>

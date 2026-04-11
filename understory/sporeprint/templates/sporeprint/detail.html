@@ -1,0 +1,120 @@
+{% extends "newshroom/base.html" %}
+
+{% block title %}{{ specimen.title }}{% endblock %}
+
+{% block content %}
+  <div class="sporeprint-detail">
+
+    <div class="sporeprint-detail-image">
+      <img src="{{ specimen.image.url }}" class="mushroom-photo" alt="{{ specimen.title }}">
+    </div>
+
+    <div class="sporeprint-detail-info">
+      <h1>{{ specimen.title }}</h1>
+
+      <p class="date">
+        Collected by <strong>{{ specimen.collector.first_name }} {{ specimen.collector.last_name }}</strong>
+        on {{ specimen.collected_on }}
+      </p>
+
+      {% if specimen.description %}
+        <p>{{ specimen.description }}</p>
+      {% endif %}
+
+      {% if specimen.source_url %}
+        <p>
+          <a href="{{ specimen.source_url }}" target="_blank" rel="noopener">
+            View original source ↗
+          </a>
+        </p>
+      {% endif %}
+
+      {# ---- Spotted toggle ---- #}
+      <div class="sporeprint-spot-wrapper">
+        {% if request.user.is_authenticated %}
+          <button
+            id="spot-btn"
+            class="sporeprint-spot-btn {% if user_has_spotted %}spotted{% endif %}"
+            data-id="{{ specimen.id }}"
+            data-action="{% if user_has_spotted %}unspot{% else %}spot{% endif %}"
+          >
+            {% if user_has_spotted %}✓ Spotted{% else %}+ Spot this{% endif %}
+          </button>
+        {% else %}
+          <p>
+            <a href="{% url 'fairy_ring:login' %}?next={{ request.path }}">
+              Log in to spot this specimen
+            </a>
+          </p>
+        {% endif %}
+
+        <span id="spot-count" class="sporeprint-spot-count">
+          {{ specimen.total_spots }} spot{{ specimen.total_spots|pluralize }}
+        </span>
+      </div>
+
+      {# ---- Collector actions ---- #}
+      <p><a href="{% url 'sporeprint:specimen_create' %}">Add another specimen</a></p>
+
+      {% if request.user == specimen.collector %}
+        <p class="specimen-actions">
+          <a href="{% url 'sporeprint:specimen_edit' specimen.id specimen.slug %}" class="btn-send">Edit</a>
+          <a href="{% url 'sporeprint:specimen_delete' specimen.id specimen.slug %}" class="btn-back btn-back--danger">Delete</a>
+        </p>
+      {% endif %}
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block domready %}
+  {% if request.user.is_authenticated %}
+
+  const spotBtn = document.getElementById('spot-btn');
+  const spotCount = document.getElementById('spot-count');
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      document.cookie.split(';').forEach(function(cookie) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+        }
+      });
+    }
+    return cookieValue;
+  }
+
+  spotBtn.addEventListener('click', function() {
+    const specimenId = this.dataset.id;
+    const action = this.dataset.action;
+
+    fetch('{% url "sporeprint:specimen_like" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: `id=${specimenId}&action=${action}`,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        if (action === 'spot') {
+          spotBtn.textContent = '✓ Spotted';
+          spotBtn.classList.add('spotted');
+          spotBtn.dataset.action = 'unspot';
+        } else {
+          spotBtn.textContent = '+ Spot this';
+          spotBtn.classList.remove('spotted');
+          spotBtn.dataset.action = 'spot';
+        }
+        const count = data.total_spots;
+        spotCount.textContent = `${count} spot${count !== 1 ? 's' : ''}`;
+      }
+    });
+  });
+
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "newshroom/base.html" %}
+{% block title %}Edit {{ specimen.title }}{% endblock %}
+
+{% block content %}
+  <h1>Edit {{ specimen.title }}</h1>
+
+  <img
+    src="{{ specimen.image.url }}"
+    class="mushroom-photo"
+    alt="{{ specimen.title }}"
+  />
+  <p><em>Leave both image fields empty to keep the current photo.</em></p>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-send">Save Changes</button>
+    <a href="{{ specimen.get_absolute_url }}" class="btn-back">Cancel</a>
+  </form>
+{% endblock %}

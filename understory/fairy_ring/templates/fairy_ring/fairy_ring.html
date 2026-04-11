@@ -29,4 +29,31 @@
             {% endif %}
         </div>
     </div>
+
+    <div class="newsletter-container">
+        <div class="newsletter-header">
+            <span class="newsletter-label">Sporeprint</span>
+            <h2>Your Field Notes</h2>
+        </div>
+        <a href="{% url 'sporeprint:specimen_create' %}" class="btn-send">+ Add a Specimen</a>
+        <div class="sporeprint-list">
+        {% if specimens %}
+            {% for specimen in specimens %}
+                <div class="sporeprint-entry">
+                    <a href="{{ specimen.get_absolute_url }}">
+                        <img
+                            src="{{ specimen.image.url }}"
+                            alt="{{ specimen.title }}"
+                            class="sporeprint-thumb"
+                        />
+                        <span>{{ specimen.title }}</span>
+                    </a>
+                    <span class="sporeprint-date">{{ specimen.collected_on|date:"M j, Y" }}</span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You haven't added any specimens yet.</p>
+        {% endif %}
+        </div>
+    </div>
 {% endblock content %}

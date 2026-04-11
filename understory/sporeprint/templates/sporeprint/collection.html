@@ -1,0 +1,97 @@
+{% extends "newshroom/base.html" %}
+
+{% block title %}Collection{% endblock %}
+
+{% block content %}
+  <h1>Specimen Collection</h1>
+
+  {# Grid of specimen cards for the current page #}
+  <div id="specimen-list"
+    data-next-page="{% if specimens.has_next %}{{ specimens.next_page_number }}{% endif %}">
+    {% include "sporeprint/specimen_list_ajax.html" %}
+  </div>
+{% endblock %}
+
+{% block domready %}
+  /* Read the CSRF cookie so POST requests are accepted by Django */
+  function getCookie(name) {
+    let value = null;
+    if (document.cookie) {
+      document.cookie.split(';').forEach(function(c) {
+        c = c.trim();
+        if (c.startsWith(name + '=')) value = decodeURIComponent(c.slice(name.length + 1));
+      });
+    }
+    return value;
+  }
+
+  /*
+   * Spot / unspot — event delegation on the grid so buttons added by
+   * infinite scroll are handled automatically without re-binding listeners.
+   */
+  document.getElementById('specimen-list').addEventListener('click', function(e) {
+    const btn = e.target.closest('.specimen-spot-btn');
+    if (!btn) return;
+
+    const specimenId = btn.dataset.id;
+    const action = btn.dataset.action;
+
+    fetch('{% url "sporeprint:specimen_like" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: `id=${specimenId}&action=${action}`,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status !== 'ok') return;
+
+      const countEl = btn.closest('.specimen-card-spot').querySelector('.sporeprint-spot-count');
+      const count = data.total_spots;
+      countEl.textContent = `${count} spot${count !== 1 ? 's' : ''}`;
+
+      if (action === 'spot') {
+        btn.textContent = '\u2713 Spotted';
+        btn.classList.add('spotted');
+        btn.dataset.action = 'unspot';
+      } else {
+        btn.textContent = '+ Spot';
+        btn.classList.remove('spotted');
+        btn.dataset.action = 'spot';
+      }
+    });
+  });
+
+  /*
+   * Infinite scroll — listens for scroll events and fetches the next page
+   * when the user is within 300px of the bottom of the document.
+   * The grid's data-next-page attribute tracks which page to fetch next;
+   * it is cleared once the view returns an empty response (no more pages).
+   */
+  const grid = document.getElementById('specimen-list');
+  let loading = false;
+
+  window.addEventListener('scroll', function() {
+    if (loading || !grid.dataset.nextPage) return;
+
+    const distanceFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+    if (distanceFromBottom > 300) return;
+
+    loading = true;
+    const nextPage = grid.dataset.nextPage;
+
+    fetch('?page=' + nextPage, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(response => response.text())
+      .then(html => {
+        if (html.trim() === '') {
+          delete grid.dataset.nextPage;
+          return;
+        }
+        grid.insertAdjacentHTML('beforeend', html);
+        grid.dataset.nextPage = parseInt(nextPage) + 1;
+        loading = false;
+      });
+  });
+{% endblock %}
