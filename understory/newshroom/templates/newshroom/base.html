@@ -23,6 +23,8 @@
           <p><a href="{% url 'fairy_ring:forager_list' %}">Browse Foragers</a></p>
           <p><a href="{% url 'sporeprint:specimen_list' %}">Browse the Collection</a></p>
           {% endif %}
+          <p><a href="{% url 'mycoguide:species_list' %}">Mushroom Guide</a></p>
+          <p><a href="{% url 'basket:basket_detail' %}">Foraging Basket ({{ basket|length }})</a></p>
         {% endif %}
         <form
           method="get"

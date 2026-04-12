@@ -87,6 +87,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'basket.context_processors.basket',
             ],
         },
     },
@@ -165,11 +166,6 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 LOGIN_REDIRECT_URL = '/fairy_ring/'
 LOGIN_URL = '/fairy_ring/login/'
 LOGOUT_URL = '/fairy_ring/logout/'
-
-# Media
-
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 
 # Authentication
 

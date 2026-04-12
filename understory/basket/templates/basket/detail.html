@@ -1,0 +1,54 @@
+{% extends "newshroom/base.html" %}
+
+{% block title %}Your Foraging Basket{% endblock %}
+
+{% block content %}
+<h1>Your Foraging Basket</h1>
+<p class="date">{{ basket|length }} species collected</p>
+
+{% if basket|length %}
+<ul>
+  {% for item in basket %}
+  <li class="list-item">
+    {% if item.species.image %}
+    <img
+      src="{{ item.species.image.url }}"
+      class="mushroom-photo"
+      alt="{{ item.species.common_name }}"
+      style="width:100%; max-width:340px; aspect-ratio:1/1;"
+    />
+    {% endif %}
+    <a href="{{ item.species.get_absolute_url }}">{{ item.species.common_name }}</a>
+    <span class="date" style="font-style:italic;">{{ item.species.scientific_name }}</span>
+    <span class="date">
+      Genus: <a href="{{ item.species.genus.get_absolute_url }}">{{ item.species.genus.name }}</a>
+    </span>
+    <span class="date">
+      Edibility:
+      <span style="
+        {% if item.species.edibility == 'edible' %}color:#2e7d32;{% endif %}
+        {% if item.species.edibility == 'caution' %}color:#e65100;{% endif %}
+        {% if item.species.edibility == 'inedible' %}color:#555;{% endif %}
+        {% if item.species.edibility == 'toxic' %}color:#b71c1c;{% endif %}
+        {% if item.species.edibility == 'deadly' %}color:#7b0000; font-weight:bold;{% endif %}
+      ">{{ item.species.get_edibility_display }}</span>
+    </span>
+    <form method="post" action="{% url 'basket:basket_remove' item.species.id %}" style="margin-top:0.5rem;">
+      {% csrf_token %}
+      <button type="submit" class="btn-danger">Remove</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+
+<div style="margin-top:2rem;">
+  <a href="{% url 'mycoguide:species_list' %}" class="btn-back">← Continue browsing</a>
+</div>
+
+{% else %}
+<div class="list-item" style="text-align:center; padding:2.5rem;">
+  <p style="color:#888; font-family:sans-serif; margin-bottom:1rem;">Your basket is empty.</p>
+  <a href="{% url 'mycoguide:species_list' %}" class="btn-send">Browse the Guide →</a>
+</div>
+{% endif %}
+{% endblock %}

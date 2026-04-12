@@ -38,6 +38,18 @@
 <p>{{ species.description }}</p>
 {% endif %}
 
+{% if species in basket %}
+<form method="post" action="{% url 'basket:basket_remove' species.id %}" style="margin-bottom:1.5rem;">
+  {% csrf_token %}
+  <button type="submit" class="btn-danger">Remove from Basket</button>
+</form>
+{% else %}
+<form method="post" action="{% url 'basket:basket_add' species.id %}" style="margin-bottom:1.5rem;">
+  {% csrf_token %}
+  <button type="submit" class="btn-send">+ Add to Basket</button>
+</form>
+{% endif %}
+
 <div class="similar-articles" style="margin-top:2rem;">
   <h2>Browse More</h2>
   <a href="{{ species.genus.get_absolute_url }}" class="similar-article-link">
