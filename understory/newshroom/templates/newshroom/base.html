@@ -25,6 +25,7 @@
           {% endif %}
           <p><a href="{% url 'mycoguide:species_list' %}">Mushroom Guide</a></p>
           <p><a href="{% url 'basket:basket_detail' %}">Foraging Basket ({{ basket|length }})</a></p>
+          <p><a href="{% url 'fieldnotes:report_list' %}">Foraging Reports</a></p>
         {% endif %}
         <form
           method="get"
@@ -66,6 +67,14 @@
     </div>
 
     <script>
+      function setToday(fieldId) {
+        var d = new Date();
+        var yyyy = d.getFullYear();
+        var mm = String(d.getMonth() + 1).padStart(2, '0');
+        var dd = String(d.getDate()).padStart(2, '0');
+        document.getElementById(fieldId).value = yyyy + '-' + mm + '-' + dd;
+      }
+
       document.addEventListener('DOMContentLoaded', function() {
         {% block domready %}
         {% endblock %}

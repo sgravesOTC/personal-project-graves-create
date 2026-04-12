@@ -4,6 +4,7 @@ from django.contrib import messages
 from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Profile, ForagerConnection
 from sporeprint.models import Specimen
+from fieldnotes.models import ForagingReport
 from newshroom.models import Article
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404, redirect
@@ -19,6 +20,7 @@ User = get_user_model()
 @login_required
 def fairy_ring(request):
     specimens = Specimen.objects.filter(collector=request.user)
+    reports = ForagingReport.objects.filter(user=request.user)
 
     following_ids = ForagerConnection.objects.filter(
         forager_from = request.user
@@ -34,7 +36,7 @@ def fairy_ring(request):
     return render(
         request,
         'fairy_ring/fairy_ring.html',
-        {'section': 'fairy_ring', 'specimens': specimens, 'actions' : actions}
+        {'section': 'fairy_ring', 'specimens': specimens, 'reports': reports, 'actions': actions}
     )
 
 def register(request):

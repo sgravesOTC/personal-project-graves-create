@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'fairy_ring.apps.FairyRingConfig',
     'mycoguide.apps.MycoguideConfig',
     'basket.apps.BasketConfig',
+    'fieldnotes.apps.FieldnotesConfig',
     'mycelium.apps.MyceliumConfig',
     'django.contrib.sites',
     'django.contrib.sitemaps',

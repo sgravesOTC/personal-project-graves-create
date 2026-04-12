@@ -377,6 +377,32 @@ p {
   margin-bottom: 1.5rem;
 }
 
+.date-field-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-today {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  background: #f5f0e8;
+  border: 1px solid #c2b5d5;
+  color: #6d3a8e;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-today:hover {
+  background: #ede4f7;
+  border-color: #8a4cb1;
+}
+
 .btn-back {
   font-family: 'Work Sans', sans-serif;
   font-size: 0.78rem;
@@ -826,6 +852,95 @@ p {
   align-items: center;
   gap: 1.25rem;
   margin-top: 1.5rem;
+}
+
+/* === Article list — cards constrained to photo width === */
+.article-list {
+  list-style: none;
+  padding: 0;
+}
+
+.article-list .list-item {
+  max-width: 480px;
+  padding: 0.6rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.article-list .mushroom-photo {
+  width: 100%;
+  max-width: none;
+  border-radius: 8px;
+}
+
+.article-list .article-image-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.article-list li > a,
+.article-list .date,
+.article-list .author,
+.article-list .description,
+.article-list .article-tags {
+  width: 100%;
+}
+
+.article-list li > a {
+  padding-top: 0.75rem;
+}
+
+.article-list .description {
+  padding-bottom: 0.25rem;
+}
+
+/* === Species guide — compact grid === */
+.species-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.species-list .list-item {
+  padding: 0.6rem;
+  margin-bottom: 0;
+  overflow: hidden;
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.species-list .list-item a {
+  font-size: 0.95rem;
+  align-self: flex-start;
+}
+
+.species-list .mushroom-photo {
+  width: 100%;
+  max-width: none;
+  border-radius: 6px;
+  aspect-ratio: 1 / 1;
+}
+
+.species-list .list-item > a,
+.species-list .date,
+.species-list .description {
+  width: 100%;
+}
+
+.species-list .list-item > a {
+  padding-top: 0.5rem;
+}
+
+.species-list .list-item form {
+  width: 100%;
+  margin-top: 0.25rem;
 }
 
 /* === Sporeprint dashboard list === */

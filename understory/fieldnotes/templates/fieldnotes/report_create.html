@@ -1,0 +1,27 @@
+{% extends "newshroom/base.html" %}
+{% block title %}New Foraging Report{% endblock %}
+
+{% block content %}
+  <h1>New Foraging Report</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      {{ form.location.label_tag }}
+      {{ form.location }}
+    </p>
+    <p>
+      {{ form.date_foraged.label_tag }}
+      <span class="date-field-wrap">
+        {{ form.date_foraged }}
+        <button type="button" class="btn-today" onclick="setToday('{{ form.date_foraged.id_for_label }}')">Today</button>
+      </span>
+    </p>
+    <p>
+      {{ form.notes.label_tag }}
+      {{ form.notes }}
+    </p>
+    <button type="submit" class="btn-send">Save Report</button>
+    <a href="{% url 'fieldnotes:report_list' %}" class="btn-back">Cancel</a>
+  </form>
+{% endblock %}

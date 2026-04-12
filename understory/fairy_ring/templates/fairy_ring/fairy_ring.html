@@ -58,6 +58,34 @@
     </div>
     <div class="newsletter-container">
         <div class="newsletter-header">
+            <span class="newsletter-label">Fieldnotes</span>
+            <h2>Your Foraging Reports</h2>
+        </div>
+        <div class="sporeprint-list">
+        {% if reports %}
+            {% for report in reports %}
+                <div class="sporeprint-entry">
+                    <a href="{% url 'fieldnotes:report_detail' report.pk %}">
+                        <span>
+                            {{ report.location }}
+                            <span class="sporeprint-date" style="display:block;">{{ report.date_foraged|date:"M j, Y" }}</span>
+                        </span>
+                    </a>
+                    <span class="sporeprint-date">{{ report.created|date:"M j, Y" }}</span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You haven't filed any reports yet.</p>
+        {% endif %}
+        </div>
+        <div style="margin-top:1rem; display:flex; gap:1.5rem; align-items:center;">
+            <a href="{% url 'fieldnotes:report_create' %}" class="btn-send">+ New Report</a>
+            {% if reports %}<a href="{% url 'fieldnotes:report_list' %}" class="btn-back">View all</a>{% endif %}
+        </div>
+    </div>
+
+    <div class="newsletter-container">
+        <div class="newsletter-header">
             <span class="newsletter-label">Mycelium</span>
             <h2>Activity Feed</h2>
         </div>

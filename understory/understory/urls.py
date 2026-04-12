@@ -32,6 +32,7 @@ urlpatterns = [
     path('sporeprint/', include('sporeprint.urls', namespace='sporeprint')),
     path('mycoguide/', include('mycoguide.urls', namespace='mycoguide')),
     path('basket/', include('basket.urls', namespace='basket')),
+    path('fieldnotes/', include('fieldnotes.urls', namespace='fieldnotes')),
     path(
         'sitemap.xml',
         sitemap,

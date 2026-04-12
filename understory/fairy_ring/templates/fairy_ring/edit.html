@@ -5,9 +5,18 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <h2>Your Info</h2>
-        {{ user_form.as_p }}
+        {% for field in user_form %}
+        <p>{{ field.label_tag }}{{ field }}</p>
+        {% endfor %}
         <h2>Your Profile</h2>
-        {{ profile_form.as_p }}
+        <p>
+            {{ profile_form.birthday.label_tag }}
+            <span class="date-field-wrap">
+                {{ profile_form.birthday }}
+                <button type="button" class="btn-today" onclick="setToday('{{ profile_form.birthday.id_for_label }}')">Today</button>
+            </span>
+        </p>
+        <p>{{ profile_form.photo.label_tag }}{{ profile_form.photo }}</p>
         <button type="submit">Save Changes</button>
     </form>
 {% endblock content %}

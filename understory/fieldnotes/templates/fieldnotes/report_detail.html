@@ -1,0 +1,35 @@
+{% extends "newshroom/base.html" %}
+{% block title %}Report &mdash; {{ report.location }}{% endblock %}
+
+{% block content %}
+  <div class="fieldnotes-detail">
+
+    <h1>Foraging Report</h1>
+
+    <p>
+      <strong>Location:</strong> {{ report.location }}<br>
+      <strong>Date foraged:</strong> {{ report.date_foraged }}<br>
+      <strong>Foraged by:</strong> {{ report.user.first_name }} {{ report.user.last_name }}<br>
+    </p>
+
+    {% if report.notes %}
+      <h2>Notes</h2>
+      <p>{{ report.notes }}</p>
+    {% endif %}
+
+    {% if report.items.all %}
+      <h2>Species Found ({{ report.get_species_count }} total)</h2>
+      <ul class="fieldnotes-species-list">
+        {% for item in report.items.all %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <p class="fieldnotes-actions">
+      <a href="{% url 'fieldnotes:report_list' %}" class="btn-back">Back to My Reports</a>
+      <a href="{% url 'fieldnotes:report_create' %}" class="btn-send">+ New Report</a>
+    </p>
+
+  </div>
+{% endblock %}

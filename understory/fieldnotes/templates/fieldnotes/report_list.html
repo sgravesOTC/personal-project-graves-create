@@ -1,0 +1,22 @@
+{% extends "newshroom/base.html" %}
+{% block title %}My Foraging Reports{% endblock %}
+
+{% block content %}
+  <h1>My Foraging Reports</h1>
+
+  <p><a href="{% url 'fieldnotes:report_create' %}" class="btn-send">+ New Report</a></p>
+
+  {% if reports %}
+    <ul class="fieldnotes-report-list">
+      {% for report in reports %}
+        <li class="fieldnotes-report-item">
+          <a href="{% url 'fieldnotes:report_detail' report.pk %}">
+            <strong>{{ report.location }}</strong> &mdash; {{ report.date_foraged }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven't filed any reports yet. <a href="{% url 'fieldnotes:report_create' %}">Create your first one.</a></p>
+  {% endif %}
+{% endblock %}

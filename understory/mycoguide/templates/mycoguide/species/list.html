@@ -18,7 +18,7 @@
   {% endfor %}
 </div>
 
-<ul>
+<ul class="species-list">
   {% for s in species %}
   <li class="list-item">
     {% if s.image %}
@@ -26,7 +26,6 @@
       src="{{ s.image.url }}"
       class="mushroom-photo"
       alt="{{ s.common_name }}"
-      style="width: 100%; max-width: 340px; aspect-ratio: 1/1;"
     />
     {% endif %}
     <a href="{{ s.get_absolute_url }}">{{ s.common_name }}</a>

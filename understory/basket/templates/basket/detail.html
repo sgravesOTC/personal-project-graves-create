@@ -4,45 +4,33 @@
 
 {% block content %}
 <h1>Your Foraging Basket</h1>
-<p class="date">{{ basket|length }} species collected</p>
+<p class="date">{{ basket|length }} species</p>
 
 {% if basket|length %}
-<ul>
+
+<div class="sporeprint-list">
   {% for item in basket %}
-  <li class="list-item">
+  <div class="sporeprint-entry">
     {% if item.species.image %}
-    <img
-      src="{{ item.species.image.url }}"
-      class="mushroom-photo"
-      alt="{{ item.species.common_name }}"
-      style="width:100%; max-width:340px; aspect-ratio:1/1;"
-    />
+      <img src="{{ item.species.image.url }}" class="sporeprint-thumb" alt="{{ item.species.common_name }}">
     {% endif %}
-    <a href="{{ item.species.get_absolute_url }}">{{ item.species.common_name }}</a>
-    <span class="date" style="font-style:italic;">{{ item.species.scientific_name }}</span>
-    <span class="date">
-      Genus: <a href="{{ item.species.genus.get_absolute_url }}">{{ item.species.genus.name }}</a>
-    </span>
-    <span class="date">
-      Edibility:
-      <span style="
-        {% if item.species.edibility == 'edible' %}color:#2e7d32;{% endif %}
-        {% if item.species.edibility == 'caution' %}color:#e65100;{% endif %}
-        {% if item.species.edibility == 'inedible' %}color:#555;{% endif %}
-        {% if item.species.edibility == 'toxic' %}color:#b71c1c;{% endif %}
-        {% if item.species.edibility == 'deadly' %}color:#7b0000; font-weight:bold;{% endif %}
-      ">{{ item.species.get_edibility_display }}</span>
-    </span>
-    <form method="post" action="{% url 'basket:basket_remove' item.species.id %}" style="margin-top:0.5rem;">
+    <a href="{{ item.species.get_absolute_url }}">
+      <span>
+        {{ item.species.common_name }}
+        <span class="sporeprint-date" style="display:block;">{{ item.species.scientific_name }}</span>
+      </span>
+    </a>
+    <form method="post" action="{% url 'basket:basket_remove' item.species.id %}">
       {% csrf_token %}
       <button type="submit" class="btn-danger">Remove</button>
     </form>
-  </li>
+  </div>
   {% endfor %}
-</ul>
+</div>
 
-<div style="margin-top:2rem;">
-  <a href="{% url 'mycoguide:species_list' %}" class="btn-back">← Continue browsing</a>
+<div style="margin-top:2rem; display:flex; gap:1.5rem; align-items:center;">
+  <a href="{% url 'mycoguide:species_list' %}" class="btn-back">← Back to Guide</a>
+  <a href="{% url 'fieldnotes:report_create' %}" class="btn-send">+ Log a Foraging Report</a>
 </div>
 
 {% else %}
