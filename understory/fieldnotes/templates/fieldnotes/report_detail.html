@@ -19,9 +19,22 @@
 
     {% if report.items.all %}
       <h2>Species Found ({{ report.get_species_count }} total)</h2>
-      <ul class="fieldnotes-species-list">
+      <ul class="sporeprint-list">
         {% for item in report.items.all %}
-          <li>{{ item }}</li>
+          <div class="sporeprint-entry">
+            {% if item.species.image %}
+              <img src="{{ item.species.image.url }}" class="sporeprint-thumb" alt="{{ item.species.common_name }}">
+            {% endif %}
+            <a href="{{ item.species.get_absolute_url }}">
+              <span>
+                {{ item.species.common_name }}
+                <span class="sporeprint-date" style="display:block;">{{ item.species.scientific_name }}</span>
+              </span>
+            </a>
+            {% if item.notes %}
+              <span class="sporeprint-date">{{ item.notes }}</span>
+            {% endif %}
+          </div>
         {% endfor %}
       </ul>
     {% endif %}
