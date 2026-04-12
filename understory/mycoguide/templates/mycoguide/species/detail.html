@@ -1,0 +1,50 @@
+{% extends "newshroom/base.html" %}
+
+{% block title %}{{ species.common_name }}{% endblock %}
+
+{% block content %}
+<h1>{{ species.common_name }}</h1>
+
+{% if species.image %}
+<img
+  src="{{ species.image.url }}"
+  class="mushroom-photo"
+  alt="{{ species.common_name }}"
+/>
+{% endif %}
+
+<div class="author-section">
+  <div class="author-info">
+    <p class="date" style="font-style:italic; font-size:1.1rem;">
+      {{ species.scientific_name }}
+    </p>
+    <p class="date">
+      Genus: <a href="{{ species.genus.get_absolute_url }}">{{ species.genus.name }}</a>
+    </p>
+    <p class="date">
+      Edibility:
+      <strong style="
+        {% if species.edibility == 'edible' %}color:#2e7d32;{% endif %}
+        {% if species.edibility == 'caution' %}color:#e65100;{% endif %}
+        {% if species.edibility == 'inedible' %}color:#555;{% endif %}
+        {% if species.edibility == 'toxic' %}color:#b71c1c;{% endif %}
+        {% if species.edibility == 'deadly' %}color:#7b0000;{% endif %}
+      ">{{ species.get_edibility_display }}</strong>
+    </p>
+  </div>
+</div>
+
+{% if species.description %}
+<p>{{ species.description }}</p>
+{% endif %}
+
+<div class="similar-articles" style="margin-top:2rem;">
+  <h2>Browse More</h2>
+  <a href="{{ species.genus.get_absolute_url }}" class="similar-article-link">
+    More in <em>{{ species.genus.name }}</em>
+  </a>
+  <a href="{% url 'mycoguide:species_list' %}" class="similar-article-link">
+    All species
+  </a>
+</div>
+{% endblock %}

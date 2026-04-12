@@ -30,6 +30,7 @@ urlpatterns = [
     path('newshroom/', include('newshroom.urls', namespace='newshroom')),
     path('fairy_ring/', include('fairy_ring.urls', namespace='fairy_ring')),
     path('sporeprint/', include('sporeprint.urls', namespace='sporeprint')),
+    pathe('mycoguide/'), include('mycoguide.urls', namespace='mycoguide'),
     path(
         'sitemap.xml',
         sitemap,

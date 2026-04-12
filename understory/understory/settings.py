@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     'newshroom.apps.NewshroomConfig',
     'sporeprint.apps.SporeprintConfig',
     'fairy_ring.apps.FairyRingConfig',
+    'mycoguide.apps.MycoguideConfig',
+    'basket.apps.BasketConfig',
     'mycelium.apps.MyceliumConfig',
     'django.contrib.sites',
     'django.contrib.sitemaps',
@@ -179,3 +181,7 @@ AUTHENTICATION_BACKENDS = [
 # Thumbnail Settings
 
 THUMBNAIL_ALIASES = {}
+
+# Basket
+
+BASKET_SESSION_ID = 'foraging_basket'

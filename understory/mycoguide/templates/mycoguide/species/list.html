@@ -1,0 +1,57 @@
+{% extends "newshroom/base.html" %}
+
+{% block title %}Mushroom Guide{% if genus %} — {{ genus.name }}{% endif %}{% endblock %}
+
+{% block content %}
+<h1>Mushroom Guide{% if genus %}: {{ genus.name }}{% endif %}</h1>
+
+<div class="article-tags" style="margin-bottom: 1.5rem;">
+  <a href="{% url 'mycoguide:species_list' %}"
+     style="{% if not genus %}font-weight:bold; color:#1a1a1a;{% endif %}">
+    All
+  </a>
+  {% for g in genera %}
+    <a href="{{ g.get_absolute_url }}"
+       style="{% if genus.slug == g.slug %}font-weight:bold; color:#1a1a1a;{% endif %}">
+      {{ g.name }}
+    </a>
+  {% endfor %}
+</div>
+
+<ul>
+  {% for s in species %}
+  <li class="list-item">
+    {% if s.image %}
+    <img
+      src="{{ s.image.url }}"
+      class="mushroom-photo"
+      alt="{{ s.common_name }}"
+      style="width: 100%; max-width: 340px; aspect-ratio: 1/1;"
+    />
+    {% endif %}
+    <a href="{{ s.get_absolute_url }}">{{ s.common_name }}</a>
+    <span class="date" style="font-style: italic;">{{ s.scientific_name }}</span>
+    <span class="date">
+      Genus: <a href="{{ s.genus.get_absolute_url }}">{{ s.genus.name }}</a>
+    </span>
+    <span class="date">
+      Edibility:
+      <span style="
+        {% if s.edibility == 'edible' %}color:#2e7d32;{% endif %}
+        {% if s.edibility == 'caution' %}color:#e65100;{% endif %}
+        {% if s.edibility == 'inedible' %}color:#555;{% endif %}
+        {% if s.edibility == 'toxic' %}color:#b71c1c;{% endif %}
+        {% if s.edibility == 'deadly' %}color:#7b0000; font-weight:bold;{% endif %}
+      ">{{ s.get_edibility_display }}</span>
+    </span>
+    {% if s.description %}
+    <span class="description">{{ s.description|truncatewords:30 }}</span>
+    {% endif %}
+  </li>
+  {% empty %}
+  <li class="list-item">
+    <p style="color:#888; font-family:sans-serif;">No species found{% if genus %} in <em>{{ genus.name }}</em>{% endif %}.</p>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
