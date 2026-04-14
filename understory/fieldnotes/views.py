@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from .models import ForagingReport, ForagingReportSpecies
 from .forms import ForagingReportForm
 from basket.basket import Basket
+import weasyprint
+from django.template.loader import render_to_string
+from django.http import HttpResponse
 
 
 @login_required
@@ -43,3 +46,5 @@ def report_detail(request, pk):
     """View a single foraging report (must belong to the logged-in user)."""
     report = ForagingReport.objects.get(pk=pk, user=request.user)
     return render(request, 'fieldnotes/report_detail.html', {'report': report})
+
+
