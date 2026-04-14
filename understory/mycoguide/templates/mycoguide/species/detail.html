@@ -37,7 +37,21 @@
 {% if species.description %}
 <p>{{ species.description }}</p>
 {% endif %}
+{% if inat_data %}
+<div class="inat-section">
+  <span class="inat-label">From iNaturalist</span>
+  
+  {% if inat_data.taxon_photos %}
+    <img src="{{ inat_data.taxon_photos.0.photo.medium_url }}" alt="{{ species.common_name }}" class="inat-photo">
+  {% endif %}
 
+  {% if inat_data.preferred_common_name %}
+    <p class="inat-meta">Also known as: <strong>{{ inat_data.preferred_common_name }}</strong></p>
+    {% comment %}For debugging purposes{% endcomment %}
+    {% comment %} <p>Inat id: {{ inat_data.id }}</p> {% endcomment %}
+  {% endif %}
+</div>
+{% endif %}
 {% if species in basket %}
 <form method="post" action="{% url 'basket:basket_remove' species.id %}" style="margin-bottom:1.5rem;">
   {% csrf_token %}

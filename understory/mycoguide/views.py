@@ -1,5 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import MushroomGenus, MushroomSpecies
+import requests
+
+
 # Create your views here.
 
 def species_list(request, genus_slug = None):
@@ -37,8 +40,37 @@ def species_detail(request, id, slug):
         slug=slug,
         available=True
     )
+    # Fetch species data from iNaturalist's taxa endpoint
+
+    response = requests.get(
+        'https://api.inaturalist.org/v1/taxa',
+        params = {
+            'q': species.scientific_name,
+            'peer_page': 1,
+        }
+    )
+
+    if response.status_code == 200:
+        results = response.json().get('results', [])
+        if results:
+            taxon_id = results[0]['id']
+            detail_response = response = requests.get(f'https://api.inaturalist.org/v1/taxa/{taxon_id}')
+            if detail_response.status_code == 200:
+                detail_results = detail_response.json().get('results',[])
+                inat_data = detail_results[0] if detail_results else None
+            else: 
+                inat_data = None
+        else:
+            inat_data = None
+    else:
+        inat_data = None
+
     return render(
         request,
         'mycoguide/species/detail.html',
-        {'species':species}
+        {
+            'species':species,
+            'inat_data':inat_data
+        }
     )
+   
