@@ -51,14 +51,14 @@ def register(request):
             return render(
                 request,
                 'fairy_ring/register_done.html',
-                {'new_user':new_user}
+                {'new_user':new_user, 'section': 'fairy_ring'}
             )
     else:
         user_form = UserRegistrationForm()
         return render(
             request,
             'fairy_ring/register.html',
-            {'user_form':user_form}
+            {'user_form':user_form, 'section': 'fairy_ring'}
         )
     
 @login_required
@@ -91,7 +91,8 @@ def edit(request):
         'fairy_ring/edit.html',
         {
             'user_form': user_form,
-            'profile_form': profile_form
+            'profile_form': profile_form,
+            'section': 'fairy_ring',
         }
     )
 

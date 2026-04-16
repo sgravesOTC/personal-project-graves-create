@@ -9,8 +9,29 @@
   <body>
     <div class="site-wrapper">
       <div class="sidebar">
-        <h2 class="title"><a href="{% url 'newshroom:article_list' %}">Newshroom</a></h2>
+        <h2 class="title">
+          {% if section == 'home' %}
+            <a href="{% url 'home:index' %}">Understory</a>
+          {% elif section == 'newshroom' %}
+            <a href="{% url 'newshroom:article_list' %}">Newshroom</a>
+          {% elif section == 'sporeprint' %}
+            <a href="{% url 'sporeprint:specimen_list' %}">Sporeprints</a>
+          {% elif section == 'fieldnotes' %}
+            <a href="{% url 'fieldnotes:report_list' %}">Foraging Reports</a>
+          {% elif section == 'mycoguide' %}
+            <a href="{% url 'mycoguide:species_list' %}">Mushroom Guide</a>
+          {% elif section == 'basket' %}
+            <a href="{% url 'basket:basket_detail' %}">Foraging Basket</a>
+          {% elif section == 'fairy_ring' or section == 'foragers' %}
+            <a href="{% url 'fairy_ring:fairy_ring' %}">Fairy Ring</a>
+          {% else %}
+            <a href="{% url 'home:index' %}">Understory</a>
+          {% endif %}
+        </h2>
         <p>Mushroom education, freshly foraged.</p>
+        {% if section != 'home' %}
+        <p><a href="{% url 'home:index' %}">Home</a></p>
+        {% endif %}
         {% if request.user.is_authenticated %}
           <p>Welcome back, {{ request.user.first_name }}!</p>
           {% if section == 'fairy_ring' or section == 'foragers' %}

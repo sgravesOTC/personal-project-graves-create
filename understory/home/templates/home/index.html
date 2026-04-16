@@ -1,0 +1,112 @@
+{% extends "newshroom/base.html" %}
+
+{% block title %}Understory - Mushroom Foraging Community{% endblock %}
+
+{% block content %}
+<h1>Welcome to Understory</h1>
+<p>A community platform for mushroom foraging enthusiasts</p>
+
+<!-- Navigation to Apps -->
+<h2>Explore</h2>
+<ul class="home-nav-list">
+    <li><a href="{% url 'newshroom:article_list' %}" class="home-nav-item">Newshroom<span class="description">Read articles about mushrooms and fungi</span></a></li>
+    <li><a href="{% url 'sporeprint:specimen_list' %}" class="home-nav-item">Sporeprints<span class="description">Browse mushroom specimen collections</span></a></li>
+    <li><a href="{% url 'mycoguide:species_list' %}" class="home-nav-item">Mushroom Guide<span class="description">Learn about mushroom species</span></a></li>
+    <li><a href="{% url 'fieldnotes:report_list' %}" class="home-nav-item">Foraging Reports<span class="description">View field notes and foraging expeditions</span></a></li>
+    {% if request.user.is_authenticated %}
+    <li><a href="{% url 'fairy_ring:fairy_ring' %}" class="home-nav-item">Fairy Ring<span class="description">Connect with other foragers</span></a></li>
+    <li><a href="{% url 'basket:basket_detail' %}" class="home-nav-item">Foraging Basket<span class="description">Your collection basket</span></a></li>
+    {% endif %}
+</ul>
+
+<!-- Most Liked Articles -->
+{% if top_articles %}
+<h2>Most Spotted Articles</h2>
+<ul class="home-content-list">
+    {% for article in top_articles %}
+    <li class="list-item">
+        <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+        <span class="author">by {{ article.author.first_name }} {{ article.author.last_name }}</span>
+        <span class="date">{{ article.publish|date:"M d, Y" }} · {{ article.total_spots }} spots</span>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<!-- Most Liked Specimens -->
+{% if top_specimens %}
+<h2>Most Spotted Specimens</h2>
+<ul class="home-content-list">
+    {% for specimen in top_specimens %}
+    <li class="list-item">
+        <a href="{{ specimen.get_absolute_url }}">{{ specimen.title }}</a>
+        <span class="author">collected by {{ specimen.collector.first_name }} {{ specimen.collector.last_name }}</span>
+        <span class="date">{{ specimen.collected_on|date:"M d, Y" }} · {{ specimen.total_spots }} spots</span>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<!-- Most Recent Foraging Reports -->
+{% if recent_reports %}
+<h2>Most Recent Foraging Reports</h2>
+<ul class="home-content-list">
+    {% for report in recent_reports %}
+    <li class="list-item">
+        <a href="{% url 'fieldnotes:report_detail' report.id %}">Foraging Report #{{ report.id }}</a>
+        <span class="author">by {{ report.user.first_name }} {{ report.user.last_name }} · 📍 {{ report.location }}</span>
+        <span class="date">Foraged {{ report.date_foraged|date:"M d, Y" }}</span>
+        {% if report.notes %}
+        <span class="description">{{ report.notes|truncatewords:15 }}</span>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<style>
+    .home-nav-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .home-nav-list li {
+        list-style: none;
+    }
+
+    .home-nav-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        background: #fff;
+        border: 1px solid #e0e0d8;
+        padding: 1.25rem 1.5rem;
+        text-decoration: none;
+        color: #1a1a1a;
+        transition: all 0.2s ease;
+    }
+
+    .home-nav-item:hover {
+        border-color: #8a4cb1;
+        box-shadow: 0 2px 6px rgba(138, 76, 177, 0.15);
+    }
+
+    .home-nav-item > :first-child {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .home-content-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 2rem;
+    }
+
+    .home-content-list li {
+        list-style: none;
+    }
+</style>
+{% endblock %}

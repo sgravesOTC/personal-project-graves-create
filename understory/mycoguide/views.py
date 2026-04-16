@@ -26,6 +26,7 @@ def species_list(request, genus_slug = None):
             'genus':genus,
             'genera':genera,
             'species':species,
+            'section': 'mycoguide',
         }
     )
 
@@ -70,7 +71,8 @@ def species_detail(request, id, slug):
         'mycoguide/species/detail.html',
         {
             'species':species,
-            'inat_data':inat_data
+            'inat_data':inat_data,
+            'section': 'mycoguide',
         }
     )
    

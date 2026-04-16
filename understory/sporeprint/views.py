@@ -62,7 +62,7 @@ def specimen_create(request):
         create_action(request.user, 'collected', specimen)  # Log activity
         messages.success(request, f'"{specimen.title}" has been added to your field notes.')
         return redirect(specimen.get_absolute_url())
-    return render(request, 'sporeprint/create.html', {'form': form, 'section': 'create'})
+    return render(request, 'sporeprint/create.html', {'form': form, 'section': 'sporeprint'})
 
 
 def specimen_detail(request, id, slug):
@@ -100,7 +100,7 @@ def specimen_detail(request, id, slug):
     return render(request, 'sporeprint/detail.html', {
         'specimen': specimen,
         'user_has_spotted': user_has_spotted,
-        'section': 'collection',
+        'section': 'sporeprint',
         'recommended_specimens': recommended_specimens,
     })
 
@@ -137,13 +137,13 @@ def specimen_edit(request, id, slug):
                 specimen.image.save(image_name, ContentFile(response.content), save=False)
             except Exception:
                 messages.error(request, 'There was a problem fetching that image. Please check the URL and try again.')
-                return render(request, 'sporeprint/edit.html', {'form': form, 'specimen': specimen})
+                return render(request, 'sporeprint/edit.html', {'form': form, 'specimen': specimen, 'section': 'sporeprint'})
 
         specimen.save()
         create_action(request.user, 'updated', specimen)  # Log activity
         messages.success(request, f'"{specimen.title}" has been updated.')
         return redirect(specimen.get_absolute_url())
-    return render(request, 'sporeprint/edit.html', {'form': form, 'specimen': specimen})
+    return render(request, 'sporeprint/edit.html', {'form': form, 'specimen': specimen, 'section': 'sporeprint'})
 
 
 @login_required
@@ -158,7 +158,7 @@ def specimen_delete(request, id, slug):
         specimen.delete()
         messages.success(request, f'"{specimen.title}" has been deleted.')
         return redirect('fairy_ring:fairy_ring')
-    return render(request, 'sporeprint/delete.html', {'specimen': specimen})
+    return render(request, 'sporeprint/delete.html', {'specimen': specimen, 'section': 'sporeprint'})
 
 @login_required
 @require_POST
@@ -231,5 +231,5 @@ def specimen_list(request):
     # Regular request: return full page with sidebar/header
     return render(request, 'sporeprint/collection.html', {
         **context,
-        'section': 'collection',
+        'section': 'sporeprint',
     })

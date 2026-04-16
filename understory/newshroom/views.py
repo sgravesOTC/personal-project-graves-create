@@ -54,7 +54,7 @@ def article_list(request, tag_slug = None):
     return render(
         request,
         'newshroom/article/list.html',
-        {'articles': articles, 'tag': tag, 'spotted_ids': spotted_ids}
+        {'articles': articles, 'tag': tag, 'spotted_ids': spotted_ids, 'section': 'newshroom'}
     )
 
 
@@ -112,6 +112,7 @@ def article_detail(request, year, month, article):
             'similar_articles': similar_articles,
             'recommended_articles': recommended_articles,
             'user_has_spotted': user_has_spotted,
+            'section': 'newshroom',
         }
     )
 
@@ -145,7 +146,8 @@ def article_search(request):
         {
             'form':form,
             'query':query,
-            'results':results
+            'results':results,
+            'section': 'newshroom',
         }
     )
 

@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'taggit',
     'easy_thumbnails',
+    'home.apps.HomeConfig',
     'newshroom.apps.NewshroomConfig',
     'sporeprint.apps.SporeprintConfig',
     'fairy_ring.apps.FairyRingConfig',

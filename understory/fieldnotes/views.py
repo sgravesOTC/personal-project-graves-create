@@ -51,6 +51,7 @@ def report_create(request):
     return render(request, 'fieldnotes/report_create.html', {
         'form': report_form,
         'species_formset': species_formset,
+        'section': 'fieldnotes',
     })
 
 @login_required
@@ -71,6 +72,7 @@ def report_list(request):
         'reports':reports,
         'date_from':date_from,
         'date_to':date_to,
+        'section': 'fieldnotes',
     })
 
 
@@ -78,6 +80,6 @@ def report_list(request):
 def report_detail(request, pk):
     """View a single foraging report (must belong to the logged-in user)."""
     report = ForagingReport.objects.get(pk=pk, user=request.user)
-    return render(request, 'fieldnotes/report_detail.html', {'report': report})
+    return render(request, 'fieldnotes/report_detail.html', {'report': report, 'section': 'fieldnotes'})
 
 
