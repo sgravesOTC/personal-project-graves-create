@@ -15,12 +15,6 @@ urlpatterns = [
     # Example: /articles/2026/4/mushroom-identification/
     path('<int:year>/<int:month>/<slug:article>/', views.article_detail, name='article_detail'),
     
-    # Newsletter sharing page - recommend article to others via email
-    path('<int:article_id>/newsletter/', views.news_letter, name='news_letter'),
-    
-    # Form endpoint for submitting article requests/suggestions
-    path('request/', views.shroom_request, name='shroom_request'),
-    
     # Filtered list - show only articles with a specific tag
     # Example: /articles/tag/edible/
     path('tag/<slug:tag_slug>/', views.article_list, name='article_list_by_tag'),

@@ -57,7 +57,21 @@ def report_create(request):
 def report_list(request):
     """List all foraging reports for the logged-in user."""
     reports = ForagingReport.objects.filter(user=request.user)
-    return render(request, 'fieldnotes/report_list.html', {'reports': reports})
+
+    # Optional date filters from query params
+    date_from = request.GET.get('from')
+    date_to = request.GET.get('to')
+
+    if date_from:
+        reports = reports.filter(date_foraged__gte=date_from)
+    if date_to:
+        reports = reports.filter(date_foraged__lte=date_to)
+
+    return render(request, 'fieldnotes/report_list.html', {
+        'reports':reports,
+        'date_from':date_from,
+        'date_to':date_to,
+    })
 
 
 @login_required

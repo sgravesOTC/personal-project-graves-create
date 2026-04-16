@@ -69,6 +69,25 @@
 
     </div>
   </div>
+
+{% if recommended_specimens %}
+  <div class="recommended-articles">
+    <h2>Others Also Viewed</h2>
+    {% for s in recommended_specimens %}
+      <a href="{{ s.get_absolute_url }}" class="specimen-rec-item">
+        <img
+          src="{% if s.image %}{{ s.image.url }}{% else %}{{ s.source_url }}{% endif %}"
+          alt="{{ s.title }}"
+          class="specimen-rec-thumb"
+        >
+        <span class="specimen-rec-info">
+          <span class="specimen-rec-title">{{ s.title }}</span>
+          <span class="specimen-rec-collector">added by {{ s.collector.first_name }} {{ s.collector.last_name }}</span>
+        </span>
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
 {% endblock %}
 
 {% block domready %}

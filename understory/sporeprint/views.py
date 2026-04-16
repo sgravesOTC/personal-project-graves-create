@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import SpecimenCreateForm, SpecimenEditForm
 from .models import Specimen
+from .recommender import SpecimenRecommender
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -66,15 +67,42 @@ def specimen_create(request):
 
 def specimen_detail(request, id, slug):
     """Display a single specimen entry with collector information.
-    
+
     Checks if current user has spotted this specimen.
+    Tracks session history and records co-occurrence for recommendations.
     """
-    specimen = get_object_or_404(Specimen.objects.select_related('collector'), id=id, slug=slug)
-    # Check if authenticated user has spotted this specimen
-    user_has_spotted = (
-        request.user.is_authenticated and specimen.spotted_by.filter(id=request.user.id).exists()
+    specimen = get_object_or_404(
+        Specimen.objects.select_related('collector'), id=id, slug=slug
     )
-    return render(request, 'sporeprint/detail.html', {'specimen': specimen, 'user_has_spotted':user_has_spotted, 'section':'collection'})
+    user_has_spotted = (
+        request.user.is_authenticated and
+        specimen.spotted_by.filter(id=request.user.id).exists()
+    )
+
+    # Track specimen in session history
+    history = request.session.get('specimen_history', [])
+    if specimen.id not in history:
+        history.append(specimen.id)
+        request.session['specimen_history'] = history
+
+    # Record co-occurrence with previously viewed specimens
+    try:
+        r = SpecimenRecommender()
+        if len(history) > 1:
+            previously_viewed = Specimen.objects.filter(
+                id__in=history
+            ).exclude(id=specimen.id)
+            r.specimens_viewed([specimen] + list(previously_viewed))
+        recommended_specimens = r.suggest_specimens_for(specimen)
+    except Exception:
+        recommended_specimens = []
+
+    return render(request, 'sporeprint/detail.html', {
+        'specimen': specimen,
+        'user_has_spotted': user_has_spotted,
+        'section': 'collection',
+        'recommended_specimens': recommended_specimens,
+    })
 
 
 @login_required

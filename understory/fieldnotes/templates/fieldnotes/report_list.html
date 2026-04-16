@@ -6,6 +6,17 @@
 
   <p><a href="{% url 'fieldnotes:report_create' %}" class="btn-send">+ New Report</a></p>
 
+  <form method="get" class="date-filter-bar">
+    <div class="form-field">
+      <label for="from">From</label>
+      <input type="date" id="from" name="from" value="{{ date_from|default:'' }}" onchange="this.form.submit()">
+    </div>
+    <div class="form-field">
+      <label for="to">To</label>
+      <input type="date" id="to" name="to" value="{{ date_to|default:'' }}" onchange="this.form.submit()">
+    </div>
+  </form>
+
   {% if reports %}
     <ul class="fieldnotes-report-list">
       {% for report in reports %}

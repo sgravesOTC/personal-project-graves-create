@@ -1,16 +1,15 @@
-from django.shortcuts import render,get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import (SearchVector,SearchQuery,SearchRank)
 from django.views.decorators.http import require_POST
 from django.db.models import Count
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
 from django.http import JsonResponse
 from taggit.models import Tag
 from .models import Article
-from .forms import NewsLetterForm, RequestForm,SearchForm
+from .forms import SearchForm
 from mycelium.utils import create_action
+from .recommender import ArticleRecommender
 
 
 # ================== NEWSHROOM VIEWS ==================
@@ -32,9 +31,6 @@ def article_list(request, tag_slug = None):
         # If a tag is specified, filter articles by that tag
         tag = get_object_or_404(Tag, slug=tag_slug)
         article_list = article_list.filter(tags__in=[tag])
-    
-    # Form for submitting new article requests
-    form = RequestForm()
     
     # Paginate results (3 articles per page)
     paginator = Paginator(article_list, 3)
@@ -58,7 +54,7 @@ def article_list(request, tag_slug = None):
     return render(
         request,
         'newshroom/article/list.html',
-        {'articles': articles, 'form': form, 'tag': tag, 'spotted_ids': spotted_ids}
+        {'articles': articles, 'tag': tag, 'spotted_ids': spotted_ids}
     )
 
 
@@ -76,6 +72,21 @@ def article_detail(request, year, month, article):
         publish__year=year,
         publish__month=month
     )
+    # Track article in session history
+    history = request.session.get('article_history', [])
+    if article.id not in history:
+        history.append(article.id)
+        request.session['article_history']=history
+
+    # Record co-occurance with previously read articles
+    try:
+        r = ArticleRecommender()
+        if len(history) > 1:
+            previously_read = Article.publisher.filter(id__in = history).exclude(id=article.id)
+            r.articles_read([article]+list(previously_read))
+        recommended_articles = r.suggest_articles_for(article)
+    except Exception:
+        recommended_articles = []
 
     # Find similar articles by shared tags
     article_tags_ids = article.tags.values_list('id', flat=True)
@@ -99,75 +110,8 @@ def article_detail(request, year, month, article):
         {
             'article': article,
             'similar_articles': similar_articles,
+            'recommended_articles': recommended_articles,
             'user_has_spotted': user_has_spotted,
-        }
-    )
-
-def news_letter(request, article_id):
-    """Display newsletter form to share an article via email.
-    
-    Allows users to recommend articles to others via email.
-    """
-    # Get the article to be shared
-    article = get_object_or_404(
-        Article,
-        id = article_id,
-        status = Article.Status.PUBLISHED
-    )
-    sent = False
-    if request.method == 'POST':
-        form = NewsLetterForm(request.POST)
-        if form.is_valid():
-            cd=form.cleaned_data
-            article_url = request.build_absolute_uri(
-                article.get_absolute_url()
-            )
-            # Compose personalized email
-            subject = (
-                f'{cd['name']} recommends {article.title}'
-            )
-            message=(
-                f'{article.title}\n{article.body}'
-            )
-            send_mail(
-                subject = subject,
-                message = message,
-                from_email=None,
-                recipient_list=[cd['email']]
-            )
-            sent = True
-    else:
-        form = NewsLetterForm()
-    return render(
-        request,
-        'newshroom/newsletter.html',
-        {
-            'form':form,
-            'sent':sent,
-            'article':article,
-        }
-    )
-@require_POST
-def shroom_request(request):
-    """Accept and save article request/suggestion from user.
-    
-    Only accepts POST requests.
-    """
-    form = RequestForm(data=request.POST)
-    if form.is_valid():
-        # Save the request to database
-        shroom_request = form.save(commit=False)
-        shroom_request.save()
-        messages.success(request, "Thanks! Your request has been received.")
-        return redirect('newshroom:article_list')
-    # If form is invalid, re-render article list with error messages
-    articles = Article.published.all()
-    return render(
-        request,
-        'newshroom/article/list.html',
-        {
-            'form': form,
-            'articles': articles,
         }
     )
 

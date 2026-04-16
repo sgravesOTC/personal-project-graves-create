@@ -105,13 +105,6 @@ articleSpotBtn.addEventListener('click', function() {
         </span>
     </div>
 
-    <!-- Allow users to recommend articles to others -->
-    <p>
-        <a href="{% url "newshroom:news_letter" article.id %}">
-        Share this article
-        </a>
-    </p>
-
     <!-- Recommend similar articles based on shared tags -->
 <div class="similar-articles">
   <h2>Similar Articles</h2>
@@ -123,5 +116,12 @@ articleSpotBtn.addEventListener('click', function() {
     <p class="no-similar">No similar articles yet.</p>
   {% endfor %}
 </div>
-
+{% if recommended_articles %}
+    <div class="recommended-articles">
+        <h2>Readers Also Explored</h2>
+        {% for a in recommended_articles %}
+            <a href="{{ a.get_absolute_url }}" class="similar-article-link">{{ a.title }}</a>
+        {% endfor %}
+    </div>
+{% endif %}
 {% endblock %}
