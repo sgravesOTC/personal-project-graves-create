@@ -20,6 +20,10 @@
         <span class="sporeprint-date" style="display:block;">{{ item.species.scientific_name }}</span>
       </span>
     </a>
+    <form method="post" action="{% url 'basket:basket_update' item.species.id %}" class="basket-qty-form">
+      {% csrf_token %}
+      <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="basket-qty-input" onchange="this.form.submit()">
+    </form>
     <form method="post" action="{% url 'basket:basket_remove' item.species.id %}">
       {% csrf_token %}
       <button type="submit" class="btn-danger">Remove</button>

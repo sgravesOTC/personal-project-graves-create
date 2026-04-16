@@ -2,47 +2,107 @@
 {% block title %}Report &mdash; {{ report.location }}{% endblock %}
 
 {% block content %}
-  <div class="fieldnotes-detail">
+<div class="fieldnotes-detail">
 
-    <h1>Foraging Report</h1>
+  <h1>Foraging Report</h1>
 
-    <p>
-      <strong>Location:</strong> {{ report.location }}<br>
-      <strong>Date foraged:</strong> {{ report.date_foraged }}<br>
-      <strong>Foraged by:</strong> {{ report.user.first_name }} {{ report.user.last_name }}<br>
-    </p>
+  <div class="species-form-row" style="max-width:620px; margin-bottom:2rem;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem 2rem; font-family:sans-serif; font-size:0.9rem;">
+      <div>
+        <span style="font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#8a4cb1;">Location</span>
+        <p style="margin:0.2rem 0 0; font-family:Georgia,serif; font-size:1rem;">{{ report.location }}</p>
+      </div>
+      <div>
+        <span style="font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#8a4cb1;">Date Foraged</span>
+        <p style="margin:0.2rem 0 0; font-family:Georgia,serif; font-size:1rem;">{{ report.date_foraged }}</p>
+      </div>
+      <div>
+        <span style="font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#8a4cb1;">Foraged By</span>
+        <p style="margin:0.2rem 0 0; font-family:Georgia,serif; font-size:1rem;">{{ report.user.first_name }} {{ report.user.last_name }}</p>
+      </div>
+      <div>
+        <span style="font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#8a4cb1;">Total Collected</span>
+        <p style="margin:0.2rem 0 0; font-family:Georgia,serif; font-size:1rem;">{{ report.get_species_count }}</p>
+      </div>
+    </div>
 
     {% if report.notes %}
-      <h2>Notes</h2>
-      <p>{{ report.notes }}</p>
+    <div style="margin-top:1.25rem; padding-top:1rem; border-top:1px solid #e0e0d8;">
+      <span style="font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#8a4cb1;">Notes</span>
+      <p style="margin:0.3rem 0 0; font-family:Georgia,serif; font-size:1rem;">{{ report.notes }}</p>
+    </div>
     {% endif %}
-
-    {% if report.items.all %}
-      <h2>Species Found ({{ report.get_species_count }} total)</h2>
-      <ul class="sporeprint-list">
-        {% for item in report.items.all %}
-          <div class="sporeprint-entry">
-            {% if item.species.image %}
-              <img src="{{ item.species.image.url }}" class="sporeprint-thumb" alt="{{ item.species.common_name }}">
-            {% endif %}
-            <a href="{{ item.species.get_absolute_url }}">
-              <span>
-                {{ item.species.common_name }}
-                <span class="sporeprint-date" style="display:block;">{{ item.species.scientific_name }}</span>
-              </span>
-            </a>
-            {% if item.notes %}
-              <span class="sporeprint-date">{{ item.notes }}</span>
-            {% endif %}
-          </div>
-        {% endfor %}
-      </ul>
-    {% endif %}
-
-    <p class="fieldnotes-actions">
-      <a href="{% url 'fieldnotes:report_list' %}" class="btn-back">Back to My Reports</a>
-      <a href="{% url 'fieldnotes:report_create' %}" class="btn-send">+ New Report</a>
-    </p>
-
   </div>
+
+  {% if report.items.all %}
+  <div style="border-top:2px solid #1a1a1a; padding-top:1.5rem;">
+    <h2 style="font-size:1.1rem; margin-bottom:1.25rem;">
+      Mushrooms Found
+      <span style="font-family:sans-serif; font-size:0.85rem; font-weight:normal; color:#888; margin-left:0.5rem;">{{ report.items.count }} species</span>
+    </h2>
+
+    {% for item in report.items.all %}
+    <div class="species-form-row" style="display:flex; gap:1.25rem; align-items:flex-start;">
+
+      {% if item.species.image %}
+      <a href="{{ item.species.get_absolute_url }}" style="flex-shrink:0;">
+        <img src="{{ item.species.image.url }}" class="sporeprint-thumb"
+             style="width:80px; height:80px;" alt="{{ item.species.common_name }}">
+      </a>
+      {% endif %}
+
+      <div style="flex:1; min-width:0;">
+
+        <div class="species-form-header" style="margin-bottom:0.75rem;">
+          <div>
+            <a href="{{ item.species.get_absolute_url }}" class="species-form-name" style="color:#1a1a1a; text-decoration:none;">
+              {{ item.species.common_name }}
+            </a>
+            <span class="sporeprint-date" style="display:block;">{{ item.species.scientific_name }}</span>
+          </div>
+          <span style="margin-left:auto; font-family:sans-serif; font-size:0.85rem; color:#555; white-space:nowrap;">
+            &times;{{ item.quantity }} collected
+          </span>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.75rem;">
+          {% if item.growth_stage %}
+          <span style="font-family:sans-serif; font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:0.2rem 0.6rem; background:#f5f0e8; border:1px solid #c2b5d5; color:#6d3a8e; border-radius:3px;">
+            {{ item.get_growth_stage_display }}
+          </span>
+          {% endif %}
+          {% if item.condition %}
+          <span style="font-family:sans-serif; font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:0.2rem 0.6rem; background:#f5f0e8; border:1px solid #c2b5d5; color:#6d3a8e; border-radius:3px;">
+            {{ item.get_condition_display }}
+          </span>
+          {% endif %}
+          <span style="font-family:sans-serif; font-size:0.72rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:0.2rem 0.6rem; background:#f5f0e8; border:1px solid #c2b5d5; color:#6d3a8e; border-radius:3px;">
+            {{ item.species.get_edibility_display }}
+          </span>
+        </div>
+
+        {% if item.habitat_context %}
+        <p style="margin:0 0 0.4rem; font-family:sans-serif; font-size:0.85rem; color:#555;">
+          <strong style="color:#1a1a1a;">Habitat:</strong> {{ item.habitat_context }}
+        </p>
+        {% endif %}
+
+        {% if item.notes %}
+        <p style="margin:0; font-family:sans-serif; font-size:0.85rem; color:#555; font-style:italic;">
+          &ldquo;{{ item.notes }}&rdquo;
+        </p>
+        {% endif %}
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <p class="fieldnotes-actions" style="margin-top:2rem; display:flex; gap:1.5rem; align-items:center;">
+    <a href="{% url 'fieldnotes:report_list' %}" class="btn-back">Back to My Reports</a>
+    <a href="{% url 'fieldnotes:report_create' %}" class="btn-send">+ New Report</a>
+  </p>
+
+</div>
 {% endblock %}

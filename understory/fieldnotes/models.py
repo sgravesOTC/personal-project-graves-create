@@ -38,6 +38,18 @@ class ForagingReportSpecies(models.Model):
     """"
     An individual species entry within a foraging report.
     """
+    # TextChoice fields for Species details
+    class GrowthStage(models.TextChoices):
+        BUTTON = 'BT', 'Button' # Very young, cap still closed
+        PIN = 'PN', 'Pin' # Just emerging
+        MATURE = 'MT', 'Mature' # Fully Developed
+        PAST = 'PS','Past Prime' # Overripe/Decaying
+    
+    class Condition(models.TextChoices):
+        FRESH = 'FR','Fresh'
+        WEATHERED = 'WT', 'Weathered'
+        DAMAGED = 'DM', 'Damaged'
+        INEDIBLE = 'IN', 'Inedible'
 
     report = models.ForeignKey(
         ForagingReport,
@@ -51,6 +63,19 @@ class ForagingReportSpecies(models.Model):
     )
     quantity = models.PositiveIntegerField(default=1)
     notes = models.CharField(max_length=250, blank = True)
+
+    # Observation Fields
+    growth_stage = models.CharField(
+        max_length=2,
+        choices = GrowthStage.choices,
+        blank = True # Makes this field optional
+    )
+    condition = models.CharField(
+        max_length=2,
+        choices = Condition.choices,
+        blank = True
+    )
+    habitat_context = models.CharField(max_length=250, blank = True)
 
     def __str__(self):
         return f'{self.quantity}X {self.species.common_name}'

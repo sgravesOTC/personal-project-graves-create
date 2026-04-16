@@ -16,6 +16,20 @@ def basket_add(request, species_id):
     return redirect('basket:basket_detail')
 
 @require_POST
+def basket_update(request, species_id):
+    """
+    Update the quantity of a species already in the basket.
+    """
+    basket = Basket(request)
+    species = get_object_or_404(MushroomSpecies, id=species_id)
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except ValueError:
+        quantity = 1
+    basket.update_quantity(species, quantity)
+    return redirect('basket:basket_detail')
+
+@require_POST
 def basket_remove(request, species_id):
     """
     Remove a species from the basket.

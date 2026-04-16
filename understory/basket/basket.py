@@ -19,18 +19,27 @@ class Basket:
             basket = self.session[settings.BASKET_SESSION_ID] = {}
         self.basket = basket
         
-    def add(self, species, override_quantity = False):
+    def add(self, species, quantity=1):
         """
-        Add a species to the basket, or makr it as already collected.
+        Add a species to the basket, or update its quantity if already present.
         We store species IDs as strings because JSON (used by sessions) requires string keys.
         """
 
         species_id = str(species.id)
         if species_id not in self.basket:
-            self.basket[species_id] = {'collected': False}
-        if override_quantity:
-            self.basket[species_id]['collected']= True
+            self.basket[species_id] = {'quantity': quantity}
+        else:
+            self.basket[species_id]['quantity'] = quantity
         self.save()
+
+    def update_quantity(self, species, quantity):
+        """
+        Update the quantity of an existing basket item.
+        """
+        species_id = str(species.id)
+        if species_id in self.basket:
+            self.basket[species_id]['quantity'] = max(1, quantity)
+            self.save()
 
     def save(self):
         """
@@ -60,6 +69,7 @@ class Basket:
             basket[str(species.id)]['species'] = species
         
         for item in basket.values():
+            item.setdefault('quantity', 1)
             yield item
 
     def __contains__(self, species):

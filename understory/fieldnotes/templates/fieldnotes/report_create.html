@@ -4,24 +4,79 @@
 {% block content %}
   <h1>New Foraging Report</h1>
 
-  <form method="post">
+  <form method="post" class="report-form">
     {% csrf_token %}
-    <p>
-      {{ form.location.label_tag }}
-      {{ form.location }}
-    </p>
-    <p>
-      {{ form.date_foraged.label_tag }}
-      <span class="date-field-wrap">
-        {{ form.date_foraged }}
-        <button type="button" class="btn-today" onclick="setToday('{{ form.date_foraged.id_for_label }}')">Today</button>
-      </span>
-    </p>
-    <p>
-      {{ form.notes.label_tag }}
-      {{ form.notes }}
-    </p>
-    <button type="submit" class="btn-send">Save Report</button>
-    <a href="{% url 'fieldnotes:report_list' %}" class="btn-back">Cancel</a>
+
+    <div class="report-form-section">
+      <div class="form-field">
+        {{ form.location.label_tag }}
+        {{ form.location }}
+        {% if form.location.errors %}
+          <span class="field-error">{{ form.location.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-field">
+        {{ form.date_foraged.label_tag }}
+        <span class="date-field-wrap">
+          {{ form.date_foraged }}
+          <button type="button" class="btn-today" onclick="setToday('{{ form.date_foraged.id_for_label }}')">Today</button>
+        </span>
+        {% if form.date_foraged.errors %}
+          <span class="field-error">{{ form.date_foraged.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+
+      <div class="form-field">
+        {{ form.notes.label_tag }}
+        {{ form.notes }}
+        {% if form.notes.errors %}
+          <span class="field-error">{{ form.notes.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if species_formset.forms %}
+      <div class="species-formset-section">
+        <h2>Species Observations</h2>
+        {{ species_formset.management_form }}
+        {% for species_form in species_formset %}
+          <div class="species-form-row">
+            <div class="species-form-header">
+              {% if species_form.initial.species.image %}
+                <img src="{{ species_form.initial.species.image.url }}"
+                     class="sporeprint-thumb"
+                     alt="{{ species_form.initial.species.common_name }}">
+              {% endif %}
+              <span class="species-form-name">
+                {{ species_form.initial.species.common_name }}
+                <span class="species-form-qty">&times; {{ species_form.initial.quantity }}</span>
+              </span>
+            </div>
+            {{ species_form.species.as_hidden }}
+            {{ species_form.quantity.as_hidden }}
+            <div class="species-form-fields">
+              <div class="form-field">
+                {{ species_form.growth_stage.label_tag }}
+                {{ species_form.growth_stage }}
+              </div>
+              <div class="form-field">
+                {{ species_form.condition.label_tag }}
+                {{ species_form.condition }}
+              </div>
+              <div class="form-field">
+                {{ species_form.habitat_context.label_tag }}
+                {{ species_form.habitat_context }}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="report-form-actions">
+      <button type="submit" class="btn-send">Save Report</button>
+      <a href="{% url 'fieldnotes:report_list' %}" class="btn-back">Cancel</a>
+    </div>
   </form>
 {% endblock %}
