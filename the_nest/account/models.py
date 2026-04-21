@@ -28,14 +28,14 @@ class Profile(models.Model):
         on_delete=models.CASCADE
     )
     bio = models.TextField()
-    parent_pronouns_1 = models.CharField(
+    pronouns_1 = models.CharField(
         max_length=3,
         choices=Pronouns.choices,
         default=None,
         null=True,
         blank=True
     )
-    parent_pronouns_2 = models.CharField(
+    pronouns_2 = models.CharField(
         max_length=3,
         choices=Pronouns.choices,
         default=None,
