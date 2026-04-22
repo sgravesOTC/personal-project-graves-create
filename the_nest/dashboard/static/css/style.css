@@ -1,0 +1,184 @@
+:root {
+    --nest-purple:  #7B4FA6;
+    --nest-pink:    #E05C8A;
+    --nest-orange:  #F4884A;
+    --nest-yellow:  #F9C74F;
+    --nest-green:   #6DBF67;
+    --nest-blue:    #4A90D9;
+    --nest-dark:    #1a1a2e;
+    --nest-light:   #f8f5ff;
+    --navbar-bg:    #ffffff;
+    --navbar-shadow: 0 2px 12px rgba(123, 79, 166, 0.15);
+}
+
+/* ── Reset / Base ── */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--nest-light);
+    color: var(--nest-dark);
+}
+
+/* ── Rainbow accent bar at very top ── */
+body::before {
+    content: '';
+    display: block;
+    height: 5px;
+    background: linear-gradient(
+        90deg,
+        var(--nest-pink)   0%,
+        var(--nest-orange) 17%,
+        var(--nest-yellow) 33%,
+        var(--nest-green)  50%,
+        var(--nest-blue)   67%,
+        var(--nest-purple) 83%,
+        var(--nest-pink)   100%
+    );
+}
+
+/* ── Navbar ── */
+.navbar {
+    background-color: var(--navbar-bg) !important;
+    box-shadow: var(--navbar-shadow);
+    padding: 0.5rem 1.5rem;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--nest-purple) !important;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    color: var(--nest-pink) !important;
+}
+
+.navbar-brand img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+.navbar-nav .nav-link {
+    color: var(--nest-dark) !important;
+    font-weight: 500;
+    padding: 0.5rem 0.9rem;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    background-color: rgba(123, 79, 166, 0.08);
+    color: var(--nest-purple) !important;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+.navbar-toggler {
+    border-color: rgba(123, 79, 166, 0.3);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(123,79,166,0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ── Buttons ── */
+.btn-primary {
+    background-color: var(--nest-purple);
+    border-color: var(--nest-purple);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:focus-visible {
+    background-color: #6a3f94;
+    border-color: #6a3f94;
+}
+
+.btn-outline-primary {
+    border-color: var(--nest-purple);
+    color: var(--nest-purple);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+    background-color: var(--nest-purple);
+    border-color: var(--nest-purple);
+    color: #fff;
+}
+
+.btn-nest-purple {
+    background-color: var(--nest-purple);
+    border-color: var(--nest-purple);
+    color: #fff;
+}
+
+.btn-nest-purple:hover,
+.btn-nest-purple:focus {
+    background-color: #6a3f94;
+    border-color: #6a3f94;
+    color: #fff;
+}
+
+.btn-outline-nest-purple {
+    background-color: transparent;
+    border-color: var(--nest-purple);
+    color: var(--nest-purple);
+}
+
+.btn-outline-nest-purple:hover,
+.btn-outline-nest-purple:focus {
+    background-color: var(--nest-purple);
+    border-color: var(--nest-purple);
+    color: #fff;
+}
+
+/* ── Add Card ── */
+.border-dashed {
+    border: 2px dashed #d0c4e8 !important;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.border-dashed:hover {
+    border-color: var(--nest-purple) !important;
+    color: var(--nest-purple);
+}
+
+/* ── Main Content ── */
+main {
+    padding: 2rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ── Footer ── */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid #e5e0f0;
+    margin-top: 3rem;
+}

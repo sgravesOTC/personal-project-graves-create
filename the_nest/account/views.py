@@ -26,7 +26,8 @@ def register(request):
             'account/register.html',
             {'user_form':user_form, 'section': 'account'}
         )
-    
+
+@login_required
 def onboarding(request):
     
     ChildFormSet = modelformset_factory(
@@ -41,6 +42,7 @@ def onboarding(request):
         if onboarding_form.is_valid() and child_formset.is_valid():
             profile = onboarding_form.save(commit=False)
             profile.user = request.user
+            profile.onboarding= True
             profile.save()
             
             children = child_formset.save(commit=False)
@@ -52,7 +54,7 @@ def onboarding(request):
             onboarding_form = OnboardingForm()
             child_formset = ChildFormSet()
 
-        return render(request, 'account/edit_profile.html',{
+        return render(request, 'account/onboarding.html',{
             'form':onboarding_form,
             'child_formset':child_formset,
             'section':'account'

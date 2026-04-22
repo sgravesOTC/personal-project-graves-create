@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account – The Nest{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="card-title mb-4">Create an Account</h2>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                <input type="text" name="{{ user_form.first_name.html_name }}"
+                                       id="{{ user_form.first_name.id_for_label }}"
+                                       class="form-control {% if user_form.first_name.errors %}is-invalid{% endif %}"
+                                       value="{{ user_form.first_name.value|default:'' }}">
+                                {% for error in user_form.first_name.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                <input type="text" name="{{ user_form.last_name.html_name }}"
+                                       id="{{ user_form.last_name.id_for_label }}"
+                                       class="form-control {% if user_form.last_name.errors %}is-invalid{% endif %}"
+                                       value="{{ user_form.last_name.value|default:'' }}">
+                                {% for error in user_form.last_name.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ user_form.username.id_for_label }}" class="form-label">Username</label>
+                                <input type="text" name="{{ user_form.username.html_name }}"
+                                       id="{{ user_form.username.id_for_label }}"
+                                       class="form-control {% if user_form.username.errors %}is-invalid{% endif %}"
+                                       value="{{ user_form.username.value|default:'' }}">
+                                {% for error in user_form.username.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ user_form.email.id_for_label }}" class="form-label">Email</label>
+                                <input type="email" name="{{ user_form.email.html_name }}"
+                                       id="{{ user_form.email.id_for_label }}"
+                                       class="form-control {% if user_form.email.errors %}is-invalid{% endif %}"
+                                       value="{{ user_form.email.value|default:'' }}">
+                                {% for error in user_form.email.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ user_form.password.id_for_label }}" class="form-label">Password</label>
+                                <input type="password" name="{{ user_form.password.html_name }}"
+                                       id="{{ user_form.password.id_for_label }}"
+                                       class="form-control {% if user_form.password.errors %}is-invalid{% endif %}">
+                                {% for error in user_form.password.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ user_form.password2.id_for_label }}" class="form-label">Repeat Password</label>
+                                <input type="password" name="{{ user_form.password2.html_name }}"
+                                       id="{{ user_form.password2.id_for_label }}"
+                                       class="form-control {% if user_form.password2.errors %}is-invalid{% endif %}">
+                                {% for error in user_form.password2.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-4">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
