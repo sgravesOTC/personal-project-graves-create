@@ -1,9 +1,11 @@
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from .models import Profile, Child
-from .forms import AddChildForm, UserRegistrationForm, OnboardingForm, CHILD_FORMSET_FIELDS
+from .forms import AddChildForm, UserRegistrationForm, OnboardingForm, CHILD_FORMSET_FIELDS, UserEditForm, ProfileEditForm
 from .utils import create_action
 from django.forms import modelformset_factory
+from django.contrib import messages
 
 def register(request):
     if request.method == 'POST':
@@ -14,18 +16,16 @@ def register(request):
             new_user.save()
             Profile.objects.create(user=new_user)
             create_action(new_user, 'created an account')
-            return render(
-                request,
-                'account/register_done.html',
-                {'new_user':new_user, 'section': 'account'}
-            )
+            login(request, new_user)
+            messages.success(request, f'Welcome to The Nest, {new_user.first_name}!')
+            return redirect('dashboard')
     else:
         user_form = UserRegistrationForm()
-        return render(
-            request,
-            'account/register.html',
-            {'user_form':user_form, 'section': 'account'}
-        )
+    return render(
+        request,
+        'account/register.html',
+        {'user_form':user_form, 'section': 'account'}
+    )
 
 @login_required
 def onboarding(request):
@@ -75,3 +75,36 @@ def add_child(request):
         form = AddChildForm()
     return render(request, 'account/add_child.html', {'form': form})
 
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user_form = UserEditForm(
+            instance = request.user,
+            data = request.POST
+        )
+        profile_form = ProfileEditForm(
+            instance = request.user.profile,
+            data = request.POST,
+            files = request.FILES
+        )
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            create_action(request.user, 'updated their profile')
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'There was an error updating your profile.')
+    else:
+        user_form = UserEditForm(instance=request.user)
+        profile_form = ProfileEditForm(instance = request.user.profile)
+    return render(
+        request,
+        'account/edit_profile.html',
+        {
+            'user_form': user_form,
+            'profile_form': profile_form,
+            'section': 'account',
+        }
+    )

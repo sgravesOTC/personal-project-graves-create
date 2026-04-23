@@ -34,7 +34,7 @@
                     </dl>
                 </div>
                 <div class="card-footer bg-transparent d-flex gap-2 flex-wrap">
-                    <a href="#" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+                    <a href="{% url "account:edit_profile" %}" class="btn btn-outline-primary btn-sm">Edit Profile</a>
                     {% if not profile.onboarding_complete %}
                     <a href="{% url 'account:onboarding' %}" class="btn btn-warning btn-sm">Complete Onboarding</a>
                     {% endif %}
