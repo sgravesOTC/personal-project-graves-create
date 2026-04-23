@@ -29,33 +29,49 @@ def register(request):
 
 @login_required
 def onboarding(request):
-    
+    profile = request.user.profile
     ChildFormSet = modelformset_factory(
         Child,
-        fields = CHILD_FORMSET_FIELDS,
+        fields=CHILD_FORMSET_FIELDS,
+        extra=1,
     )
 
     if request.method == 'POST':
-        onboarding_form = OnboardingForm(request.POST)
-        child_formset = ChildFormSet(request.POST)
+        onboarding_form = OnboardingForm(request.POST, instance=profile)
+        child_formset = ChildFormSet(request.POST, queryset=Child.objects.none())
 
         if onboarding_form.is_valid() and child_formset.is_valid():
             profile = onboarding_form.save(commit=False)
-            profile.user = request.user
-            profile.onboarding= True
+            profile.onboarding_complete = True
             profile.save()
-            
+
             children = child_formset.save(commit=False)
             for child in children:
                 child.parent = profile
                 child.save()
-        
-        else:
-            onboarding_form = OnboardingForm()
-            child_formset = ChildFormSet()
 
-        return render(request, 'account/onboarding.html',{
-            'form':onboarding_form,
-            'child_formset':child_formset,
-            'section':'account'
-        })
+            return redirect('dashboard')
+    else:
+        onboarding_form = OnboardingForm(instance=profile)
+        child_formset = ChildFormSet(queryset=Child.objects.none())
+
+    return render(request, 'account/onboarding.html', {
+        'form': onboarding_form,
+        'child_formset': child_formset,
+        'section': 'account'
+    })
+    
+@login_required
+def add_child(request):
+    if request.method == 'POST':
+        form = AddChildForm(request.POST)
+        if form.is_valid():
+            child = form.save(commit=False)
+            child.parent = request.user.profile
+            child.save()
+            create_action(request.user, 'added a child')
+            return redirect('dashboard')
+    else:
+        form = AddChildForm()
+    return render(request, 'account/add_child.html', {'form': form})
+

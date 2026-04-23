@@ -12,5 +12,6 @@ urlpatterns = [
     # URLS
     path('register/', views.register, name='register'),
     path('onboarding/', views.onboarding, name='onboarding'),
+    path('add_child/', views.add_child, name = 'add_child'),
     
 ]

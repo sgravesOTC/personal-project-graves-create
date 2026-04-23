@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to The Nest – Onboarding{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+
+            <div class="text-center mb-4">
+                <h2>Welcome to The Nest!</h2>
+                <p class="text-muted">Let's set up your profile before you get started.</p>
+            </div>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- Profile Section -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-3">About You</h5>
+
+                        <div class="row g-3">
+
+                            <div class="col-sm-6">
+                                <label for="{{ form.pronouns_1.id_for_label }}" class="form-label">Pronouns</label>
+                                <select name="{{ form.pronouns_1.html_name }}"
+                                        id="{{ form.pronouns_1.id_for_label }}"
+                                        class="form-select {% if form.pronouns_1.errors %}is-invalid{% endif %}">
+                                    <option value="">—</option>
+                                    {% for value, label in form.pronouns_1.field.choices %}
+                                        <option value="{{ value }}" {% if form.pronouns_1.value == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% for error in form.pronouns_1.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="{{ form.pronouns_2.id_for_label }}" class="form-label">Second Pronoun <span class="text-muted">(optional)</span></label>
+                                <select name="{{ form.pronouns_2.html_name }}"
+                                        id="{{ form.pronouns_2.id_for_label }}"
+                                        class="form-select {% if form.pronouns_2.errors %}is-invalid{% endif %}">
+                                    <option value="">—</option>
+                                    {% for value, label in form.pronouns_2.field.choices %}
+                                        <option value="{{ value }}" {% if form.pronouns_2.value == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% for error in form.pronouns_2.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ form.bio.id_for_label }}" class="form-label">Bio <span class="text-muted">(tell us a bit about yourself)</span></label>
+                                <textarea name="{{ form.bio.html_name }}"
+                                          id="{{ form.bio.id_for_label }}"
+                                          rows="3"
+                                          class="form-control {% if form.bio.errors %}is-invalid{% endif %}">{{ form.bio.value|default:'' }}</textarea>
+                                {% for error in form.bio.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Children Section -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-1">Your Children</h5>
+                        <p class="text-muted small mb-3">Add at least one child, or skip and add them later from your dashboard.</p>
+
+                        {{ child_formset.management_form }}
+
+                        {% for child_form in child_formset %}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-3">Child {{ forloop.counter }}</h6>
+                            <div class="row g-3">
+
+                                <div class="col-12">
+                                    <label for="{{ child_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                    <input type="text" name="{{ child_form.first_name.html_name }}"
+                                           id="{{ child_form.first_name.id_for_label }}"
+                                           class="form-control {% if child_form.first_name.errors %}is-invalid{% endif %}"
+                                           value="{{ child_form.first_name.value|default:'' }}">
+                                    {% for error in child_form.first_name.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label for="{{ child_form.pronouns_1.id_for_label }}" class="form-label">Pronouns</label>
+                                    <select name="{{ child_form.pronouns_1.html_name }}"
+                                            id="{{ child_form.pronouns_1.id_for_label }}"
+                                            class="form-select {% if child_form.pronouns_1.errors %}is-invalid{% endif %}">
+                                        <option value="">—</option>
+                                        {% for value, label in child_form.pronouns_1.field.choices %}
+                                            <option value="{{ value }}" {% if child_form.pronouns_1.value == value %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% for error in child_form.pronouns_1.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <label for="{{ child_form.pronouns_2.id_for_label }}" class="form-label">Second Pronoun <span class="text-muted">(optional)</span></label>
+                                    <select name="{{ child_form.pronouns_2.html_name }}"
+                                            id="{{ child_form.pronouns_2.id_for_label }}"
+                                            class="form-select {% if child_form.pronouns_2.errors %}is-invalid{% endif %}">
+                                        <option value="">—</option>
+                                        {% for value, label in child_form.pronouns_2.field.choices %}
+                                            <option value="{{ value }}" {% if child_form.pronouns_2.value == value %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% for error in child_form.pronouns_2.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="{{ child_form.age_range.id_for_label }}" class="form-label">Age Range</label>
+                                    <select name="{{ child_form.age_range.html_name }}"
+                                            id="{{ child_form.age_range.id_for_label }}"
+                                            class="form-select {% if child_form.age_range.errors %}is-invalid{% endif %}">
+                                        <option value="">—</option>
+                                        {% for value, label in child_form.age_range.field.choices %}
+                                            <option value="{{ value }}" {% if child_form.age_range.value == value %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% for error in child_form.age_range.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100">Finish Setup</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary w-100">Skip for Now</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

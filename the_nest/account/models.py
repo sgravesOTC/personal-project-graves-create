@@ -44,7 +44,6 @@ class Profile(models.Model):
     )
     timezone = None # TODO
     onboarding_complete = models.BooleanField(default=False)
-
     privacy_level = None # TODO
 
 class Child(models.Model):

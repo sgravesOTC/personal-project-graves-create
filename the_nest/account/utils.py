@@ -5,7 +5,7 @@ from .models import Action
 
 
 def create_action(user, verb, target=None):
-    """Log a user action (e.g., 'spotted', 'collected', 'updated').
+    """Log a user action (e.g., 'read', 'created', 'updated').
     
     Prevents duplicate actions for the same user, verb, and target within 60 seconds.
     This deduplication prevents activity feeds from being cluttered with repeated
